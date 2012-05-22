@@ -1,3 +1,14 @@
+Read("coxeter-generators.gap");
+
+# Reduces a word in a coxeter group
+#
+# Example:
+# G := FreeGroup(2);
+# a := G.1;
+# b := G.2;
+# letters := GroupWordToLetters(a*a*b*a, G);
+#
+# letters <- [1,1,2,1]
 CoxeterReduceWord := function (w, W)
     local rep, subRep, i, j, w2;
 
@@ -21,36 +32,12 @@ CoxeterReduceWord := function (w, W)
     return w;
 end;
 
-CoxeterGroup := function (rank, upperTriangleOfCoxeterMatrix)
-    local generatorNames, relations, F, S, W, i, j, k;
-    
-    generatorNames := List([1..rank], n -> Concatenation("s", String(n)));
-    
-    F := FreeGroup(generatorNames);
-    S := GeneratorsOfGroup(F);
-    
-    relations := [];
-    
-    Append(relations, List([1..rank], n -> S[n]^2));
-    
-    k := 1;
-    for i in [1..rank] do
-        for j in [i+1..rank] do
-            Add(relations, (S[i]*S[j])^(upperTriangleOfCoxeterMatrix[k]));
-            k := k + 1;
-        od;
-    od;
-
-    W := F / relations;
-    
-    return W;
+# Calulates the length of an element in a coxeter group.
+CoxeterWordLength := function (w, W)
+    return Length(CoxeterReduceWord(w, W));
 end;
 
-CoxeterGroup_An := function (n)
-    local upperTriangleOfCoxeterMatrix;
-
-    upperTriangleOfCoxeterMatrix := Flat(List(Reversed([1..n-1]), m -> Concatenation([3], List([1..m-1], o -> 2))));
-
-    return CoxeterGroup(n, upperTriangleOfCoxeterMatrix);
+# Extracts all twisted involutions from a coxeter group.
+CoxeterTwistedInvolutions := function (W, Theta)
+    return Filtered(Elements(W), w -> IsOne(Theta(w)*w));
 end;
-
