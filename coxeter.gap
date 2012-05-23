@@ -1,14 +1,6 @@
 Read("coxeter-generators.gap");
 
-# Reduces a word in a coxeter group
-#
-# Example:
-# G := FreeGroup(2);
-# a := G.1;
-# b := G.2;
-# letters := GroupWordToLetters(a*a*b*a, G);
-#
-# letters <- [1,1,2,1]
+# Reduces a word in a coxeter group.
 CoxeterReduceWord := function (w, W)
     local rep, subRep, i, j, w2;
 
@@ -16,10 +8,7 @@ CoxeterReduceWord := function (w, W)
 
     for i in [1..Length(rep)-1] do
         for j in [i+1..Length(rep)] do
-            subRep := [];
-            Append(subRep, rep{[1..i-1]});
-            Append(subRep, rep{[i+1..j-1]});
-            Append(subRep, rep{[j+1..Length(rep)]});
+            subRep := rep{Filtered([1..Length(rep)], n -> n <> i and n <> j)};
 
             w2 := GroupLettersToWord(subRep, W);
 
@@ -37,7 +26,3 @@ CoxeterWordLength := function (w, W)
     return Length(CoxeterReduceWord(w, W));
 end;
 
-# Extracts all twisted involutions from a coxeter group.
-CoxeterTwistedInvolutions := function (W, Theta)
-    return Filtered(Elements(W), w -> IsOne(Theta(w)*w));
-end;
