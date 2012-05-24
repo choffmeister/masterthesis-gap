@@ -49,28 +49,53 @@ TwistedInvolutionTwistedExpressionLength := function (theta, _s, W)
     return Length(TwistedInvolutionReduceTwistedExpression(theta, _s, W));
 end;
 
+FindElementIndex := function (list, selector)
+    local i;
+    
+    for i in [1..Length(list)] do
+        if (selector(list[i])) then
+            return i;
+        fi;
+    od;
+    
+    return -1;
+end;
+
 # Calculates the poset Wk(theta).
 TwistedInvolutionCalculateWktheta := function (theta, I, W)
-    local queue, current, currentLength, current2, i;
+    local result, queue, current, currentLength, next, i, j;
     
-    queue := [[]];
+    result := [[One(W), [[]]]];
+    queue := [[One(W), []]];
 
     while Length(queue) > 0 do
         current := queue[1];
         Remove(queue, 1);
         
-        currentLength := TwistedInvolutionTwistedExpressionLength(theta, current, W);
+        currentLength := TwistedInvolutionTwistedExpressionLength(theta, current[2], W);
         
         for i in I do
-            current2 := Concatenation(current, [i]);
+            next := [MonoidAction(theta, current[1], [i], W), Concatenation(current[2], [i])];
             
-            if (TwistedInvolutionTwistedExpressionLength(theta, current2, W) = currentLength + 1) then
-                Add(queue, current2);
+            if (TwistedInvolutionTwistedExpressionLength(theta, next[2], W) = currentLength + 1) then
+                Add(queue, next);
                 
-                #TODO: return results instead of printing it to the screen
-                Print(current, " < ", current2, "\n");
+                j := FindElementIndex(result, n -> n[1] = next[1]); 
+                if j = -1 then
+                    Add(result, [CoxeterReduceWord(next[1], W), [next[2]]]);
+                else
+                    Add(result[j][2], next[2]);
+                fi;
             fi;
         od;  
     od;
+    
+    for i in result do
+        Display(i[1]);
+        Display(i[2]);
+        Print("\n");
+    od;
+    
+    return result;
 end;
 
