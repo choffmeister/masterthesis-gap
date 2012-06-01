@@ -62,40 +62,37 @@ FindElementIndex := function (list, selector)
 end;
 
 # Calculates the poset Wk(theta).
-TwistedInvolutionCalculateWktheta := function (theta, I, W)
-    local result, queue, current, currentLength, next, i, j;
+TwistedInvolutionWeakOrdering := function (theta, I, W)
+    local vertices, edges, queue, currentElement, currentTwistedExpression, currentIndex, nextElement, nextTwistedExpression, i, j;
     
-    result := [[One(W), [[]]]];
-    queue := [[One(W), []]];
-
+    vertices := [[One(W),0]];
+    edges := [];
+    queue := [[One(W), [], 1]];
+    
     while Length(queue) > 0 do
-        current := queue[1];
+        currentElement := queue[1][1];
+        currentTwistedExpression := queue[1][2];
+        currentIndex := queue[1][3];
         Remove(queue, 1);
         
-        currentLength := TwistedInvolutionTwistedExpressionLength(theta, current[2], W);
-        
-        for i in I do
-            next := [MonoidAction(theta, current[1], [i], W), Concatenation(current[2], [i])];
+        for i in [1..Length(I)] do
+            nextElement := CoxeterReduceWord(MonoidAction(theta, currentElement, [I[i]], W), W);
+            nextTwistedExpression := TwistedInvolutionReduceTwistedExpression(theta, Concatenation(currentTwistedExpression, [I[i]]), W);
             
-            if (TwistedInvolutionTwistedExpressionLength(theta, next[2], W) = currentLength + 1) then
-                Add(queue, next);
-                
-                j := FindElementIndex(result, n -> n[1] = next[1]); 
+            if (Length(nextTwistedExpression) = Length(currentTwistedExpression) + 1) then
+                j := FindElementIndex(vertices, n -> n[1] = nextElement); 
                 if j = -1 then
-                    Add(result, [CoxeterReduceWord(next[1], W), [next[2]]]);
-                else
-                    Add(result[j][2], next[2]);
+                    Add(vertices, [nextElement, Length(nextTwistedExpression)]);
+                    j := Length(vertices);
                 fi;
+                
+                Add(queue, [nextElement, nextTwistedExpression, j]);
+                
+                Add(edges, [currentIndex - 1, j - 1, i - 1]);
             fi;
-        od;  
+        od;
     od;
     
-    for i in result do
-        Display(i[1]);
-        Display(i[2]);
-        Print("\n");
-    od;
-    
-    return result;
+    return [List(I, n -> String(n)), List(vertices, n -> [String(n[1]), n[2]]), edges];
 end;
 
