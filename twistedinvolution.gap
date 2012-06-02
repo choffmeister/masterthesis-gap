@@ -84,10 +84,10 @@ TwistedInvolutionWeakOrdering := function (theta, I, W)
                 if j = -1 then
                     Add(vertices, [nextElement, Length(nextTwistedExpression)]);
                     j := Length(vertices);
+                    
+                    Add(queue, [nextElement, nextTwistedExpression, j]);
                 fi;
-                
-                Add(queue, [nextElement, nextTwistedExpression, j]);
-                
+
                 Add(edges, [currentIndex - 1, j - 1, i - 1]);
             fi;
         od;
