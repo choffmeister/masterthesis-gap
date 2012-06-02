@@ -63,7 +63,7 @@ end;
 
 # Calculates the poset Wk(theta).
 TwistedInvolutionWeakOrdering := function (theta, I, W)
-    local vertices, edges, queue, currentElement, currentTwistedExpression, currentIndex, nextElement, nextTwistedExpression, i, j;
+    local vertices, edges, queue, currentElement, currentTwistedExpression, currentIndex, nextElement, nextTwistedExpression, i, j, elementToName;
     
     vertices := [[One(W),0]];
     edges := [];
@@ -93,6 +93,14 @@ TwistedInvolutionWeakOrdering := function (theta, I, W)
         od;
     od;
     
-    return [List(I, n -> String(n)), List(vertices, n -> [String(n[1]), n[2]]), edges];
+    elementToName := function(w)
+        if IsOne(w) then
+            return "e";
+        else
+            return String(w);
+        fi;
+    end;
+    
+    return [List(I, n -> String(n)), List(vertices, n -> [elementToName(n[1]), n[2]]), edges];
 end;
 

@@ -41,9 +41,14 @@ end;
 # Example:
 # A4 := CoxeterGroup_An(4);
 CoxeterGroup_An := function (n)
-    local upperTriangleOfCoxeterMatrix;
+    local upperTriangleOfCoxeterMatrix, W;
 
     upperTriangleOfCoxeterMatrix := Flat(List(Reversed([1..n-1]), m -> Concatenation([3], List([1..m-1], o -> 2))));
 
-    return CoxeterGroup(n, upperTriangleOfCoxeterMatrix);
+    W := CoxeterGroup(n, upperTriangleOfCoxeterMatrix);
+    
+    SetName(W, Concatenation("A_", String(n)));
+    SetSize(W, Factorial(n + 1));
+    
+    return W;
 end;

@@ -87,3 +87,27 @@ IsGroupInvariantUnderHomomorphism := function (homomorphism, group)
 
     return true;
 end;
+
+GeneratorPermutatingMap := function(permutation, W)
+    return function(w)
+        local letters;
+
+        letters := GroupWordToLetters(w, W);
+
+        letters := List(letters, n -> permutation[n]);
+
+        return GroupLettersToWord(letters, W);
+    end;
+end;
+
+LogWeakOrderingResult := function(groupName, automorphismName, result)
+    local file;
+
+    file := OutputTextFile("result", true);
+    SetPrintFormattingStatus(file, false);
+    PrintTo(file, "W = ", groupName, "\n");
+    PrintTo(file, "theta = ", automorphismName, "\n");
+    PrintTo(file, result);
+    PrintTo(file, "\n\n\n");
+    CloseStream(file);
+end;
