@@ -36,10 +36,6 @@ CoxeterGroup := function (rank, upperTriangleOfCoxeterMatrix)
     return W;
 end;
 
-# Generates the coxeter group A_n with given rank n.
-#
-# Example:
-# A4 := CoxeterGroup_An(4);
 CoxeterGroup_An := function (n)
     local upperTriangleOfCoxeterMatrix, W;
 
@@ -50,5 +46,100 @@ CoxeterGroup_An := function (n)
     SetName(W, Concatenation("A_", String(n)));
     SetSize(W, Factorial(n + 1));
     
-    return W;
+    return [W, n, upperTriangleOfCoxeterMatrix];
 end;
+
+CoxeterGroup_BCn := function (n)
+    local upperTriangleOfCoxeterMatrix, W;
+
+    upperTriangleOfCoxeterMatrix := Flat(List(Reversed([1..n-1]), m -> Concatenation([3], List([1..m-1], o -> 2))));
+    upperTriangleOfCoxeterMatrix[Length(upperTriangleOfCoxeterMatrix)] := 4;
+    
+    W := CoxeterGroup(n, upperTriangleOfCoxeterMatrix);
+    
+    SetName(W, Concatenation("BC_", String(n)));
+    SetSize(W, 2^n * Factorial(n));
+    
+    return [W, n, upperTriangleOfCoxeterMatrix];
+end;
+
+CoxeterGroup_Dn := function (n)
+    local upperTriangleOfCoxeterMatrix, W;
+
+    upperTriangleOfCoxeterMatrix := Flat(List(Reversed([1..n-1]), m -> Concatenation([3], List([1..m-1], o -> 2))));
+    upperTriangleOfCoxeterMatrix[Length(upperTriangleOfCoxeterMatrix)] := 2;
+    upperTriangleOfCoxeterMatrix[Length(upperTriangleOfCoxeterMatrix) - 1] := 3;
+    upperTriangleOfCoxeterMatrix[Length(upperTriangleOfCoxeterMatrix) - 2] := 3;
+    
+    W := CoxeterGroup(n, upperTriangleOfCoxeterMatrix);
+    
+    SetName(W, Concatenation("D_", String(n)));
+    SetSize(W, 2^(n-1) * Factorial(n));
+    
+    return [W, n, upperTriangleOfCoxeterMatrix];
+end;
+
+CoxeterGroup_E6 := function ()
+    Error("Not yet implemented.");
+end;
+
+CoxeterGroup_E7 := function ()
+    Error("Not yet implemented.");
+end;
+
+CoxeterGroup_E8 := function ()
+    Error("Not yet implemented.");
+end;
+
+CoxeterGroup_F4 := function ()
+    local upperTriangleOfCoxeterMatrix, W;
+
+    upperTriangleOfCoxeterMatrix := [3, 2, 2, 4, 2, 3];
+    
+    W := CoxeterGroup(4, upperTriangleOfCoxeterMatrix);
+    
+    SetName(W, "F_4");
+    SetSize(W, 1152);
+    
+    return [W, 4, upperTriangleOfCoxeterMatrix];
+end;
+
+CoxeterGroup_H3 := function ()
+    local upperTriangleOfCoxeterMatrix, W;
+
+    upperTriangleOfCoxeterMatrix := [5, 2, 3];
+    
+    W := CoxeterGroup(3, upperTriangleOfCoxeterMatrix);
+    
+    SetName(W, "H_3");
+    SetSize(W, 120);
+    
+    return [W, 3, upperTriangleOfCoxeterMatrix];
+end;
+
+CoxeterGroup_H4 := function ()
+    local upperTriangleOfCoxeterMatrix, W;
+
+    upperTriangleOfCoxeterMatrix := [5, 2, 2, 3, 2, 3];
+    
+    W := CoxeterGroup(4, upperTriangleOfCoxeterMatrix);
+    
+    SetName(W, "H_4");
+    SetSize(W, 14400);
+    
+    return [W, 4, upperTriangleOfCoxeterMatrix];
+end;
+
+CoxeterGroup_I2m := function (m)
+    local upperTriangleOfCoxeterMatrix, W;
+
+    upperTriangleOfCoxeterMatrix := [m];
+    
+    W := CoxeterGroup(2, upperTriangleOfCoxeterMatrix);
+    
+    SetName(W, Concatenation("I_2(", String(m), ")"));
+    SetSize(W, 2*m);
+
+    return [W, 2, upperTriangleOfCoxeterMatrix];
+end;
+

@@ -88,6 +88,30 @@ IsGroupInvariantUnderHomomorphism := function (homomorphism, group)
     return true;
 end;
 
+GeneratorTranspositioningMap := function(transpositions, W)
+    return function(w)
+        local letters, t;
+
+        letters := GroupWordToLetters(w, W);
+
+        letters := List(letters, function (n)
+            for t in transpositions do
+                if t[1] = n then
+                    return t[2];
+                fi;
+                
+                if t[2] = n then
+                    return t[1];
+                fi;
+            od;
+            
+            return n;
+        end);
+
+        return GroupLettersToWord(letters, W);
+    end;
+end;
+
 GeneratorPermutatingMap := function(permutation, W)
     return function(w)
         local letters;
@@ -100,14 +124,3 @@ GeneratorPermutatingMap := function(permutation, W)
     end;
 end;
 
-LogWeakOrderingResult := function(groupName, automorphismName, result)
-    local file;
-
-    file := OutputTextFile("result", true);
-    SetPrintFormattingStatus(file, false);
-    PrintTo(file, "W = ", groupName, "\n");
-    PrintTo(file, "theta = ", automorphismName, "\n");
-    PrintTo(file, result);
-    PrintTo(file, "\n\n\n");
-    CloseStream(file);
-end;
