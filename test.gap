@@ -51,3 +51,32 @@ Print("A_4, (14)(23)\n");
 theta := GeneratorPermutatingMap([4, 3, 2, 1], W);
 wk := TwistedInvolutionWeakOrdering(theta, S, W);
 LogWeakOrderingResult(Name(W), "(14)(23)", wk);
+
+
+# A_5
+Print("A_5, id\n");
+W := CoxeterGroup_An(5);
+S := GeneratorsOfGroup(W);
+theta := w -> w;
+wk := TwistedInvolutionWeakOrdering(theta, S, W);
+LogWeakOrderingResult(Name(W), "id", wk);
+
+Print("A_5, (15)(24)\n");
+theta := GeneratorPermutatingMap([5, 4, 3, 2, 1], W);
+wk := TwistedInvolutionWeakOrdering(theta, S, W);
+LogWeakOrderingResult(Name(W), "(15)(24)", wk);
+
+
+# A_6
+Print("A_6, id\n");
+W := CoxeterGroup_An(6);
+S := GeneratorsOfGroup(W);
+theta := w -> w;
+wk := TwistedInvolutionWeakOrdering(theta, S, W);
+LogWeakOrderingResult(Name(W), "id", wk);
+
+Print("A_6, (16)(25)(34)\n");
+theta := GeneratorPermutatingMap([6, 5, 4, 3, 2, 1], W);
+wk := TwistedInvolutionWeakOrdering(theta, S, W);
+LogWeakOrderingResult(Name(W), "(16)(25)(34)", wk);
+
