@@ -3,7 +3,7 @@ Read("coxeter.gap");
 Read("twistedinvolution.gap");
 
 # By now we suppose, that W is finite
-W := CoxeterGroup_An(3);
+W := CoxeterGroup_An(5);
 S := GeneratorsOfGroup(W);
 
 #theta := function (w)
@@ -19,5 +19,9 @@ S := GeneratorsOfGroup(W);
 #end;
 theta := w -> w;
 
-Print(TwistedInvolutionWeakOrdering(theta, S, W));
+file := OutputTextFile("result_Wk_A5_id", true);
+SetPrintFormattingStatus(file, false);
+PrintTo(file, TwistedInvolutionWeakOrdering(theta, S, W));
+PrintTo(file, "\n\n\n");
+CloseStream(file);
 
