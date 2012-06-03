@@ -170,3 +170,22 @@ CoxeterGroup_I2m := function (m)
     return [W, 2, upperTriangleOfCoxeterMatrix];
 end;
 
+CoxeterGroup_TildeAn := function (n)
+    local upperTriangleOfCoxeterMatrix, W;
+
+    upperTriangleOfCoxeterMatrix := Flat(List(Reversed([1..n]), m -> Concatenation([3], List([1..m-1], o -> 2))));
+
+    if n = 1 then
+        upperTriangleOfCoxeterMatrix[1] := 0;
+    else
+        upperTriangleOfCoxeterMatrix[n] := 3;
+    fi;
+
+    W := CoxeterGroup(n + 1, upperTriangleOfCoxeterMatrix);
+    
+    SetName(W, Concatenation("\\tilde A_", String(n)));
+    SetSize(W, infinity);
+    
+    return [W, n + 1, upperTriangleOfCoxeterMatrix];
+end;
+

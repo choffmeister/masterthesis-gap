@@ -81,32 +81,36 @@ data := [
         [], [[1, 2]]
     ]],
     
-    [CoxeterGroup_I2m(9), [
+    [CoxeterGroup_TildeAn(1), [
         [], [[1, 2]]
     ]],
     
-    [CoxeterGroup_I2m(10), [
-        [], [[1, 2]]
+    [CoxeterGroup_TildeAn(2), [
+        []
     ]],
     
-    [CoxeterGroup_I2m(11), [
-        [], [[1, 2]]
+    [CoxeterGroup_TildeAn(3), [
+        [], [[1, 3], [2, 4]]
     ]],
     
-    [CoxeterGroup_I2m(12), [
-        [], [[1, 2]]
+    [CoxeterGroup_TildeAn(4), [
+        []
     ]],
     
-    [CoxeterGroup_I2m(13), [
-        [], [[1, 2]]
-    ]],
-    
-    [CoxeterGroup_I2m(14), [
-        [], [[1, 2]]
+    [CoxeterGroup_TildeAn(5), [
+        [], [[1, 4], [2, 5], [3, 6]]
     ]]
 ];
 
-elementToName := function(w)
+convertSize := function (s)
+    if s = infinity then
+        return 0;
+    else
+        return s;
+    fi;
+end;
+
+elementToName := function (w)
     if IsOne(w) then
         return "e";
     else
@@ -120,13 +124,18 @@ for groupData in data do
     W := groupData[1][1];
     S := GeneratorsOfGroup(W);
     
-    result1 := [ Name(W), groupData[1][2], Size(W), groupData[1][3], [] ];
+    result1 := [ Name(W), groupData[1][2], convertSize(Size(W)), groupData[1][3], [] ];
     
     for automorphismData in groupData[2] do
-        Print("Wk(" , Name(W), ", ", String(automorphismData), ")... ");
+        Print("Wk(" , Name(W), ", ", String(automorphismData), ")...\n");
         
         theta := GeneratorTranspositioningMap(automorphismData, W);
-        wk := TwistedInvolutionWeakOrdering(theta, S, W);
+        
+        if (IsFinite(W)) then
+            wk := TwistedInvolutionWeakOrdering(theta, S, W);
+        else
+            wk := TwistedInvolutionWeakOrderingWithMaxLength(theta, S, W, 8);
+        fi;
         
         Print("Done.\n");
 
