@@ -21,9 +21,9 @@ data := [
         [], [[1, 5], [2, 4]]
     ]],
 
-#    [CoxeterGroup_An(6), [
-#        [], [[1, 6], [2, 5], [3, 4]]
-#    ]],
+    [CoxeterGroup_An(6), [
+        [], [[1, 6], [2, 5], [3, 4]]
+    ]],
 
     [CoxeterGroup_BCn(2), [
         [], [[1, 2]]
@@ -46,12 +46,12 @@ data := [
     ]],
     
     [CoxeterGroup_H3(), [
-        [], [[1, 3]]
+        []
     ]],
     
-#    [CoxeterGroup_H4(), [
-#        [], [[1, 4], [2, 3]]
-#    ]],
+    [CoxeterGroup_H4(), [
+        []
+    ]],
     
     [CoxeterGroup_I2m(5), [
         [], [[1, 2]]
@@ -94,6 +94,14 @@ data := [
     ]]
 ];
 
+elementToName := function(w)
+    if IsOne(w) then
+        return "e";
+    else
+        return String(w);
+    fi;
+end;
+
 result := [];
 
 for groupData in data do
@@ -110,7 +118,7 @@ for groupData in data do
         
         Print("Done.\n");
 
-        result2 := [ automorphismData, wk ];
+        result2 := [ automorphismData, [List(wk[1], n -> String(n)), List(wk[2], n -> [elementToName(n[1]), n[2]]), List(wk[3], n -> [n[1]-1, n[2]-1, n[3]-1])] ];
         Add(result1[5], result2);
     od;
     

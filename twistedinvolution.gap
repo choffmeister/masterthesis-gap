@@ -20,11 +20,6 @@ MonoidAction := function (theta, w, _s, W)
     return result;
 end;
 
-# Extracts all twisted involutions from a coxeter group.
-TwistedInvolutions := function (theta, W)
-    return Filtered(Elements(W), w -> IsOne(theta(w)*w));
-end;
-
 # Reduces a twisted expression.
 TwistedInvolutionReduceTwistedExpression := function (theta, _s, W)
     local i, j, _s2, _sEvaluated;
@@ -62,45 +57,44 @@ FindElementIndex := function (list, selector)
 end;
 
 # Calculates the poset Wk(theta).
-TwistedInvolutionWeakOrdering := function (theta, I, W)
-    local vertices, edges, queue, currentElement, currentTwistedExpression, currentIndex, nextElement, nextTwistedExpression, i, j, elementToName;
+TwistedInvolutionWeakOrdering := function (theta, S, W)
+    local done, k, i, j, l, s, x, y, nodes, edges, incomingEdges, elementsByLength;
     
-    vertices := [[One(W),0]];
+    done := false;
+    k := 0;
+    nodes := [[One(W), 0]];
     edges := [];
-    queue := [[One(W), [], 1]];
-    
-    while Length(queue) > 0 do
-        currentElement := queue[1][1];
-        currentTwistedExpression := queue[1][2];
-        currentIndex := queue[1][3];
-        Remove(queue, 1);
-        
-        for i in [1..Length(I)] do
-            nextElement := CoxeterReduceWord(MonoidAction(theta, currentElement, [I[i]], W), W);
-            nextTwistedExpression := TwistedInvolutionReduceTwistedExpression(theta, Concatenation(currentTwistedExpression, [I[i]]), W);
-            
-            if (Length(nextTwistedExpression) = Length(currentTwistedExpression) + 1) then
-                j := FindElementIndex(vertices, n -> n[1] = nextElement); 
-                if j = -1 then
-                    Add(vertices, [nextElement, Length(nextTwistedExpression)]);
-                    j := Length(vertices);
-                    
-                    Add(queue, [nextElement, nextTwistedExpression, j]);
-                fi;
 
-                Add(edges, [currentIndex - 1, j - 1, i - 1]);
-            fi;
+    while not done do
+        done := true;
+
+        for i in Filtered([1..Length(nodes)], n -> nodes[n][2] = k) do
+            done := false;
+            
+            incomingEdges := Filtered(edges, e -> e[2] = i);
+            x := nodes[i][1];
+            
+            for l in Filtered([1..Length(S)], n -> Position(List(incomingEdges, e -> e[3]), n) = fail) do
+                s := S[l];
+                
+                y := theta(s)*x*s;
+                if (x = y) then
+                    y := x * s;
+                fi;
+                
+                j := FindElementIndex(nodes, n -> n[2] = k + 1 and n[1] = y);
+                if j = -1 then
+                    Add(nodes, [y, k + 1]);
+                    j := Length(nodes);
+                fi;
+                
+                Add(edges, [i, j, l]);
+            od;
         od;
+
+        k := k + 1;
     od;
     
-    elementToName := function(w)
-        if IsOne(w) then
-            return "e";
-        else
-            return String(w);
-        fi;
-    end;
-    
-    return [List(I, n -> String(n)), List(vertices, n -> [elementToName(n[1]), n[2]]), edges];
+    return [S, nodes, edges];
 end;
 
