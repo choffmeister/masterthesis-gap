@@ -40,6 +40,18 @@ data := [
     [CoxeterGroup_Dn(4), [
         []
     ]],
+    
+    [CoxeterGroup_E6(), [
+        [], [[1, 6], [2, 5]]
+    ]],
+    
+    [CoxeterGroup_E7(), [
+        #[]
+    ]],
+    
+    [CoxeterGroup_E8(), [
+        #[]
+    ]],
 
     [CoxeterGroup_F4(), [
         [], [[1, 4], [2, 3]]

@@ -80,15 +80,42 @@ CoxeterGroup_Dn := function (n)
 end;
 
 CoxeterGroup_E6 := function ()
-    Error("Not yet implemented.");
+    local upperTriangleOfCoxeterMatrix, W;
+
+    upperTriangleOfCoxeterMatrix := [3, 2, 2, 2, 2,  3, 2, 2, 2,  3, 3, 2,  2, 2,  3];
+    
+    W := CoxeterGroup(6, upperTriangleOfCoxeterMatrix);
+    
+    SetName(W, "E_6");
+    SetSize(W, 2^7 * 3^4 * 5);
+    
+    return [W, 6, upperTriangleOfCoxeterMatrix];
 end;
 
 CoxeterGroup_E7 := function ()
-    Error("Not yet implemented.");
+    local upperTriangleOfCoxeterMatrix, W;
+
+    upperTriangleOfCoxeterMatrix := [3, 2, 2, 2, 2, 2,  3, 2, 2, 2, 2,  3, 3, 2, 2,  2, 2, 2,  3, 2,  3];
+    
+    W := CoxeterGroup(7, upperTriangleOfCoxeterMatrix);
+    
+    SetName(W, "E_7");
+    SetSize(W, 2^10 * 3^4 * 5 * 7);
+    
+    return [W, 7, upperTriangleOfCoxeterMatrix];
 end;
 
 CoxeterGroup_E8 := function ()
-    Error("Not yet implemented.");
+    local upperTriangleOfCoxeterMatrix, W;
+
+    upperTriangleOfCoxeterMatrix := [3, 2, 2, 2, 2, 2, 2,  3, 2, 2, 2, 2, 2,  3, 3, 2, 2, 2,  2, 2, 2, 2,  3, 2, 2,  3, 2,  3];
+    
+    W := CoxeterGroup(8, upperTriangleOfCoxeterMatrix);
+    
+    SetName(W, "E_8");
+    SetSize(W, 2^14 * 3^5 * 5^2 * 7);
+    
+    return [W, 8, upperTriangleOfCoxeterMatrix];
 end;
 
 CoxeterGroup_F4 := function ()
@@ -99,7 +126,7 @@ CoxeterGroup_F4 := function ()
     W := CoxeterGroup(4, upperTriangleOfCoxeterMatrix);
     
     SetName(W, "F_4");
-    SetSize(W, 1152);
+    SetSize(W, 2^7 * 3^2);
     
     return [W, 4, upperTriangleOfCoxeterMatrix];
 end;
