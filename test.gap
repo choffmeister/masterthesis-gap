@@ -139,7 +139,7 @@ for groupData in data do
         
         Print("Done.\n");
 
-        result2 := [ automorphismData, [List(wk[1], n -> String(n)), List(wk[2], n -> [elementToName(n[1]), n[2]]), List(wk[3], n -> [n[1]-1, n[2]-1, n[3]-1])] ];
+        result2 := [ automorphismData, [List(wk[1], n -> String(n)), List(wk[2], n -> [elementToName(n[1]), n[2]]), List(wk[3], n -> [n[1]-1, n[2]-1, n[3]-1, n[4]])] ];
         Add(result1[5], result2);
     od;
     

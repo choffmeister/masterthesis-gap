@@ -58,7 +58,7 @@ end;
 
 # Calculates the poset Wk(theta).
 TwistedInvolutionWeakOrderingWithMaxLength := function (theta, S, W, maxLength)
-    local done, k, i, j, l, s, x, y, nodes, edges, incomingEdges, elementsByLength;
+    local done, k, i, j, l, s, x, y, nodes, edges, incomingEdges, elementsByLength, t;
     
     done := false;
     k := 0;
@@ -77,9 +77,11 @@ TwistedInvolutionWeakOrderingWithMaxLength := function (theta, S, W, maxLength)
             for l in Filtered([1..Length(S)], n -> Position(List(incomingEdges, e -> e[3]), n) = fail) do
                 s := S[l];
                 
+                t := 1;
                 y := theta(s)*x*s;
                 if (x = y) then
                     y := x * s;
+                    t := 0;
                 fi;
                 
                 j := FindElementIndex(nodes, n -> n[2] = k + 1 and n[1] = y);
@@ -88,7 +90,7 @@ TwistedInvolutionWeakOrderingWithMaxLength := function (theta, S, W, maxLength)
                     j := Length(nodes);
                 fi;
                 
-                Add(edges, [i, j, l]);
+                Add(edges, [i, j, l, t]);
             od;
         od;
 
