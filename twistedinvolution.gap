@@ -97,6 +97,8 @@ TwistedInvolutionWeakOrderingWithMaxLength := function (theta, S, W, maxLength)
         k := k + 1;
     od;
     
+    Sort(edges, function (a, b) return a[1] < b[1] or a[2] < b[2]; end);
+    
     return [S, nodes, edges];
 end;
 
