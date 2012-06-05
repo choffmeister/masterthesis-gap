@@ -63,6 +63,9 @@ TwistedInvolutionWeakOrdering := function (filename, theta, S, W, maxLength)
     fileV := OutputTextFile(Concatenation("results/", filename, "-vertices"), false);
     fileE := OutputTextFile(Concatenation("results/", filename, "-edges"), false);
     
+    SetPrintFormattingStatus(fileV, false);
+    SetPrintFormattingStatus(fileE, false);
+    
     PrintTo(fileV, "#length of word, word\n");
     PrintTo(fileE, "#source node index, target node index, label, type\n");
     
@@ -74,8 +77,8 @@ TwistedInvolutionWeakOrdering := function (filename, theta, S, W, maxLength)
     edges1 := [];
 
     while Length(nodes0) > 0 and k < maxLength do
-        Print("k = ", k, "\n");
         for i in [1..Length(nodes0)] do
+            Print(k, " ", i, "         \r");
             incomingEdges := Filtered(edges0, e -> e[2] = index + i);
             x := nodes0[i][1];
             
@@ -119,5 +122,7 @@ TwistedInvolutionWeakOrdering := function (filename, theta, S, W, maxLength)
     
     CloseStream(fileV);
     CloseStream(fileE);
+    
+    return [ index ];
 end;
 

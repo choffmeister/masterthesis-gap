@@ -8,12 +8,12 @@ data := [
     [ CoxeterGroup_BCn(2), [ [1,2] ] ],
     [ CoxeterGroup_BCn(3), [ [1,2,3] ] ],
     [ CoxeterGroup_Dn(4), [ [1,2,3,4] ] ],
-#    [ CoxeterGroup_E6(), [ [1,2,3,4,5,6], [6,5,3,4,2,1] ] ],
+    [ CoxeterGroup_E6(), [ [1,2,3,4,5,6], [6,5,3,4,2,1] ] ],
 #    [ CoxeterGroup_E7(), [ [1,2,3,4,5,6,7] ] ],
 #    [ CoxeterGroup_E8(), [ [1,2,3,4,5,6,7,8] ] ],
     [ CoxeterGroup_F4(), [ [1,2,3,4] ] ],
     [ CoxeterGroup_H3(), [ [1,2,3] ] ],
-#    [ CoxeterGroup_H4(), [ [1,2,3,4] ] ],
+    [ CoxeterGroup_H4(), [ [1,2,3,4] ] ],
     [ CoxeterGroup_I2m(3), [ [1,2], [2,1] ] ],
     [ CoxeterGroup_I2m(4), [ [1,2], [2,1] ] ],
     [ CoxeterGroup_TildeAn(1), [ [1,2], [2,1] ] ],
@@ -25,10 +25,13 @@ for groupData in data do
     S := GeneratorsOfGroup(W);
     
     for automorphismData in groupData[2] do
+        startTime := Runtime();
+    
         automorphism := GroupAutomorphismByImages(W, automorphismData);
         filename := Concatenation([Name(W), "-", Name(automorphism)]);
 
         fileD := OutputTextFile(Concatenation("results/", filename, "-data"), false);
+        SetPrintFormattingStatus(fileD, false);
         PrintTo(fileD, "#name, rank, size, coxeter matrix, automorphism\n");
         PrintTo(fileD, Name(W), "\n");
         PrintTo(fileD, groupData[1][2], "\n");
@@ -37,14 +40,19 @@ for groupData in data do
         PrintTo(fileD, Name(automorphism), "\n");
         CloseStream(fileD);
         
-        Print("Wk(" , filename, ")...\n");
+        Print("Wk(" , Name(W), ", ", Name(automorphism), ")...\n");
 
         if (IsFinite(W)) then
-            TwistedInvolutionWeakOrdering(filename, automorphism, S, W, infinity);
+            info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, infinity);
         else
-            TwistedInvolutionWeakOrdering(filename, automorphism, S, W, 10);
+            info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, 10);
         fi;
         
-        Print("Done.\n");
+        endTime := Runtime();
+        
+        Print("- Time spent: ", StringTime(endTime - startTime), "\n");
+        Print("- Size of Inv(theta): ", info[1], "\n");
+        Print("\n");
     od;
 od;
+
