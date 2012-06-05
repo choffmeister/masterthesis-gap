@@ -57,52 +57,67 @@ FindElementIndex := function (list, selector)
 end;
 
 # Calculates the poset Wk(theta).
-TwistedInvolutionWeakOrderingWithMaxLength := function (theta, S, W, maxLength)
-    local done, k, i, j, l, s, x, y, nodes, edges, incomingEdges, elementsByLength, t;
+TwistedInvolutionWeakOrdering := function (filename, theta, S, W, maxLength)
+    local k, i, j, l, s, x, y, n, e, index, nodes0, nodes1, edges0, edges1, incomingEdges, t, fileV, fileE;
     
-    done := false;
+    fileV := OutputTextFile(Concatenation("results/", filename, "-vertices"), false);
+    fileE := OutputTextFile(Concatenation("results/", filename, "-edges"), false);
+    
+    PrintTo(fileV, "#length of word, word\n");
+    PrintTo(fileE, "#source node index, target node index, label, type\n");
+    
     k := 0;
-    nodes := [[One(W), 0]];
-    edges := [];
+    index := 0;
+    nodes0 := [[One(W), 0]];
+    nodes1 := [];
+    edges0 := [];
+    edges1 := [];
 
-    while not done and k < maxLength do
-        done := true;
-
-        for i in Filtered([1..Length(nodes)], n -> nodes[n][2] = k) do
-            done := false;
-            
-            incomingEdges := Filtered(edges, e -> e[2] = i);
-            x := nodes[i][1];
+    while Length(nodes0) > 0 and k < maxLength do
+        Print("k = ", k, "\n");
+        for i in [1..Length(nodes0)] do
+            incomingEdges := Filtered(edges0, e -> e[2] = index + i);
+            x := nodes0[i][1];
             
             for l in Filtered([1..Length(S)], n -> Position(List(incomingEdges, e -> e[3]), n) = fail) do
                 s := S[l];
                 
                 t := 1;
-                y := theta(s)*x*s;
+                y := s^theta*x*s;
                 if (x = y) then
                     y := x * s;
                     t := 0;
                 fi;
                 
-                j := FindElementIndex(nodes, n -> n[2] = k + 1 and n[1] = y);
+                j := FindElementIndex(nodes1, n -> n[1] = y);
                 if j = -1 then
-                    Add(nodes, [y, k + 1]);
-                    j := Length(nodes);
+                    Add(nodes1, [y, k + 1]);
+                    j := Length(nodes1);
                 fi;
                 
-                Add(edges, [i, j, l, t]);
+                Add(edges1, [index + i, index + Length(nodes0) + j, l, t]);
             od;
         od;
 
+        for n in nodes0 do
+            PrintTo(fileV, n[2], " ", n[1], "\n");
+        od;
+        
+        Sort(edges0, function (a, b) return a[1] < b[1] or a[2] < b[2]; end);
+
+        for e in edges0 do
+            PrintTo(fileE, e[1], " ", e[2], " ", e[3], " ", e[4], "\n");
+        od;
+
+        index := index + Length(nodes0);
+        nodes0 := nodes1;
+        nodes1 := [];
+        edges0 := edges1;
+        edges1 := [];
         k := k + 1;
     od;
     
-    Sort(edges, function (a, b) return a[1] < b[1] or a[2] < b[2]; end);
-    
-    return [S, nodes, edges];
-end;
-
-TwistedInvolutionWeakOrdering := function (theta, S, W)
-    return TwistedInvolutionWeakOrderingWithMaxLength(theta, S, W, infinity);
+    CloseStream(fileV);
+    CloseStream(fileE);
 end;
 

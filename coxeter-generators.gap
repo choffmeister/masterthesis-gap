@@ -42,7 +42,7 @@ CoxeterGroup_An := function (n)
     upperTriangleOfCoxeterMatrix := Flat(List(Reversed([1..n-1]), m -> Concatenation([3], List([1..m-1], o -> 2))));
 
     W := CoxeterGroup(n, upperTriangleOfCoxeterMatrix);
-    
+
     SetName(W, Concatenation("A_", String(n)));
     SetSize(W, Factorial(n + 1));
     

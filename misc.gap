@@ -1,26 +1,3 @@
-# Finds the maximal element in a list by a given evaluator. The evaluator has
-# to map every element in the list to an integer.
-#
-# Example:
-# L := [1,3,-1,-4];
-# max := FindMaxElement(L, n -> AbsInt(n));
-#
-# max <- -4
-FindMaxElement := function (list, evaluator)
-    local maxElement, maxValue, i;
-        
-    maxElement := list[1];
-    maxValue := evaluator(maxElement);
-    
-    for i in [2..Length(list)] do
-        if (evaluator(list[i]) > maxValue) then
-            maxElement := list[i];
-        fi;
-    od;
-
-    return maxElement;
-end;
-
 # Generates a list of generator indices from a word.
 #
 # Example:
@@ -60,67 +37,22 @@ GroupLettersToWord := function (letters, G)
     return result;
 end;
 
-# Tests if a group is invariant under a given homomorphism.
-#
-# Example:
-# G := FreeGroup(2);
-# a := G.1;
-# b := G.2;
-# G2 := Group(a);
-#
-# h1 := g -> g;
-# h2 := (a <-> b);
-#
-# i1 := IsGroupInvariantUnderHomomorphism(h1, G2);
-# i2 := IsGroupInvariantUnderHomomorphism(h2, G2);
-#
-# i1 <- true
-# i2 <- false
-IsGroupInvariantUnderHomomorphism := function (homomorphism, group)
-    local g;
+GroupAutomorphismByImages := function (G, generatorPermutation)
+    local automorphism, generators;
     
-    for g in GeneratorsOfGroup(group) do
-        if not (homomorphism(g) in group) then
-            return false;
-        fi;
-    od;
+    generators := GeneratorsOfGroup(G);
+    automorphism := GroupHomomorphismByImages(G, G, generators, generators{generatorPermutation});
+    
+    if (generatorPermutation = [1..Length(generators)]) then
+        SetName(automorphism, "id");
+    else
+        SetName(automorphism, Concatenation("(", JoinStringsWithSeparator(generatorPermutation, ","), ")"));
+    fi;
 
-    return true;
+    return automorphism;
 end;
 
-GeneratorTranspositioningMap := function(transpositions, W)
-    return function(w)
-        local letters, t;
-
-        letters := GroupWordToLetters(w, W);
-
-        letters := List(letters, function (n)
-            for t in transpositions do
-                if t[1] = n then
-                    return t[2];
-                fi;
-                
-                if t[2] = n then
-                    return t[1];
-                fi;
-            od;
-            
-            return n;
-        end);
-
-        return GroupLettersToWord(letters, W);
-    end;
-end;
-
-GeneratorPermutatingMap := function(permutation, W)
-    return function(w)
-        local letters;
-
-        letters := GroupWordToLetters(w, W);
-
-        letters := List(letters, n -> permutation[n]);
-
-        return GroupLettersToWord(letters, W);
-    end;
+GroupAutomorphismIdentity := function (G)
+    return GroupAutomorphismByImages(G, [1..Length(GeneratorsOfGroup(G))]);
 end;
 

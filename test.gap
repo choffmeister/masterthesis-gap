@@ -3,151 +3,48 @@ Read("coxeter.gap");
 Read("twistedinvolution.gap");
 
 data := [
-    [CoxeterGroup_An(1), [
-        []
-    ]],
-    [CoxeterGroup_An(2), [
-        [], [[1, 2]]
-    ]],
-    [CoxeterGroup_An(3), [
-        [], [[1, 3]]
-    ]],
-
-    [CoxeterGroup_An(4), [
-        [], [[1, 4], [2, 3]]
-    ]],
-
-    [CoxeterGroup_An(5), [
-        [], [[1, 5], [2, 4]]
-    ]],
-
-    [CoxeterGroup_An(6), [
-        [], [[1, 6], [2, 5], [3, 4]]
-    ]],
-
-    [CoxeterGroup_BCn(2), [
-        [], [[1, 2]]
-    ]],
-
-    [CoxeterGroup_BCn(3), [
-        []
-    ]],
-    
-    [CoxeterGroup_BCn(4), [
-        []
-    ]],
-    
-    [CoxeterGroup_Dn(4), [
-        []
-    ]],
-    
-    [CoxeterGroup_E6(), [
-        [], [[1, 6], [2, 5]]
-    ]],
-    
-    [CoxeterGroup_E7(), [
-        #[]
-    ]],
-    
-    [CoxeterGroup_E8(), [
-        #[]
-    ]],
-
-    [CoxeterGroup_F4(), [
-        [], [[1, 4], [2, 3]]
-    ]],
-    
-    [CoxeterGroup_H3(), [
-        []
-    ]],
-    
-    [CoxeterGroup_H4(), [
-        []
-    ]],
-    
-    [CoxeterGroup_I2m(5), [
-        [], [[1, 2]]
-    ]],
-    
-    [CoxeterGroup_I2m(6), [
-        [], [[1, 2]]
-    ]],
-    
-    [CoxeterGroup_I2m(7), [
-        [], [[1, 2]]
-    ]],
-    
-    [CoxeterGroup_I2m(8), [
-        [], [[1, 2]]
-    ]],
-    
-    [CoxeterGroup_TildeAn(1), [
-        [], [[1, 2]]
-    ]],
-    
-    [CoxeterGroup_TildeAn(2), [
-        []
-    ]],
-    
-    [CoxeterGroup_TildeAn(3), [
-        [], [[1, 3], [2, 4]]
-    ]],
-    
-    [CoxeterGroup_TildeAn(4), [
-        []
-    ]],
-    
-    [CoxeterGroup_TildeAn(5), [
-        [], [[1, 4], [2, 5], [3, 6]]
-    ]]
+    [ CoxeterGroup_An(1), [ [1] ] ],
+    [ CoxeterGroup_An(2), [ [1,2], [2,1] ] ],
+    [ CoxeterGroup_BCn(2), [ [1,2] ] ],
+    [ CoxeterGroup_BCn(3), [ [1,2,3] ] ],
+    [ CoxeterGroup_Dn(4), [ [1,2,3,4] ] ],
+#    [ CoxeterGroup_E6(), [ [1,2,3,4,5,6], [6,5,3,4,2,1] ] ],
+#    [ CoxeterGroup_E7(), [ [1,2,3,4,5,6,7] ] ],
+#    [ CoxeterGroup_E8(), [ [1,2,3,4,5,6,7,8] ] ],
+    [ CoxeterGroup_F4(), [ [1,2,3,4] ] ],
+    [ CoxeterGroup_H3(), [ [1,2,3] ] ],
+#    [ CoxeterGroup_H4(), [ [1,2,3,4] ] ],
+    [ CoxeterGroup_I2m(3), [ [1,2], [2,1] ] ],
+    [ CoxeterGroup_I2m(4), [ [1,2], [2,1] ] ],
+    [ CoxeterGroup_TildeAn(1), [ [1,2], [2,1] ] ],
+    [ CoxeterGroup_TildeAn(2), [ [1,2,3] ] ]
 ];
-
-convertSize := function (s)
-    if s = infinity then
-        return 0;
-    else
-        return s;
-    fi;
-end;
-
-elementToName := function (w)
-    if IsOne(w) then
-        return "e";
-    else
-        return String(w);
-    fi;
-end;
-
-result := [];
 
 for groupData in data do
     W := groupData[1][1];
     S := GeneratorsOfGroup(W);
     
-    result1 := [ Name(W), groupData[1][2], convertSize(Size(W)), groupData[1][3], [] ];
-    
     for automorphismData in groupData[2] do
-        Print("Wk(" , Name(W), ", ", String(automorphismData), ")...\n");
+        automorphism := GroupAutomorphismByImages(W, automorphismData);
+        filename := Concatenation([Name(W), "-", Name(automorphism)]);
+
+        fileD := OutputTextFile(Concatenation("results/", filename, "-data"), false);
+        PrintTo(fileD, "#name, rank, size, coxeter matrix, automorphism\n");
+        PrintTo(fileD, Name(W), "\n");
+        PrintTo(fileD, groupData[1][2], "\n");
+        PrintTo(fileD, Size(W), "\n");
+        PrintTo(fileD, "[", JoinStringsWithSeparator(groupData[1][3], ","), "]\n");
+        PrintTo(fileD, Name(automorphism), "\n");
+        CloseStream(fileD);
         
-        theta := GeneratorTranspositioningMap(automorphismData, W);
-        
+        Print("Wk(" , filename, ")...\n");
+
         if (IsFinite(W)) then
-            wk := TwistedInvolutionWeakOrdering(theta, S, W);
+            TwistedInvolutionWeakOrdering(filename, automorphism, S, W, infinity);
         else
-            wk := TwistedInvolutionWeakOrderingWithMaxLength(theta, S, W, 8);
+            TwistedInvolutionWeakOrdering(filename, automorphism, S, W, 10);
         fi;
         
         Print("Done.\n");
-
-        result2 := [ automorphismData, [List(wk[1], n -> String(n)), List(wk[2], n -> [elementToName(n[1]), n[2]]), List(wk[3], n -> [n[1]-1, n[2]-1, n[3]-1, n[4]])] ];
-        Add(result1[5], result2);
     od;
-    
-    
-    Add(result, result1);
 od;
-
-file := OutputTextFile("result", false);
-SetPrintFormattingStatus(file, false);
-PrintTo(file, result);
-CloseStream(file);
