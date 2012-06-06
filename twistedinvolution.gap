@@ -71,7 +71,7 @@ TwistedInvolutionWeakOrdering := function (filename, theta, S, W, maxLength)
     
     k := 0;
     index := 0;
-    nodes0 := [[One(W), 0]];
+    nodes0 := [[One(W), 0, []]];
     nodes1 := [];
     edges0 := [];
     edges1 := [];
@@ -82,7 +82,7 @@ TwistedInvolutionWeakOrdering := function (filename, theta, S, W, maxLength)
             incomingEdges := Filtered(edges0, e -> e[2] = index + i);
             x := nodes0[i][1];
             
-            for l in Filtered([1..Length(S)], n -> Position(List(incomingEdges, e -> e[3]), n) = fail) do
+            for l in Filtered([1..Length(S)], n -> Position(nodes0[i][3], n) = fail) do
                 s := S[l];
                 
                 t := 1;
@@ -92,12 +92,13 @@ TwistedInvolutionWeakOrdering := function (filename, theta, S, W, maxLength)
                     t := 0;
                 fi;
                 
-                j := FindElementIndex(nodes1, n -> n[1] = y);
+                j := FindElementIndex(nodes1, n -> Position(n[3], l) = fail and n[1] = y);
                 if j = -1 then
-                    Add(nodes1, [y, k + 1]);
+                    Add(nodes1, [y, k + 1, []]);
                     j := Length(nodes1);
                 fi;
                 
+                Add(nodes1[j][3], l);
                 Add(edges1, [index + i, index + Length(nodes0) + j, l, t]);
             od;
         od;
