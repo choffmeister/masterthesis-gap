@@ -58,16 +58,19 @@ end;
 
 # Calculates the poset Wk(theta).
 TwistedInvolutionWeakOrdering := function (filename, theta, S, W, maxLength)
-    local k, i, j, l, s, x, y, n, e, index, nodes0, nodes1, edges0, edges1, incomingEdges, t, fileV, fileE;
+    local k, i, j, l, s, x, y, n, e, index, nodes0, nodes1, edges0, edges1, incomingEdges, t, fileV, fileE, vCount, eCount;
     
     fileV := OutputTextFile(Concatenation("results/", filename, "-vertices"), false);
     fileE := OutputTextFile(Concatenation("results/", filename, "-edges"), false);
     
+    vCount := 0;
+    eCount := 0;
+    
     SetPrintFormattingStatus(fileV, false);
     SetPrintFormattingStatus(fileE, false);
     
-    PrintTo(fileV, "#length of word, word\n");
-    PrintTo(fileE, "#source node index, target node index, label, type\n");
+    PrintTo(fileV, "[");
+    PrintTo(fileE, "[");
     
     k := 0;
     index := 0;
@@ -104,13 +107,28 @@ TwistedInvolutionWeakOrdering := function (filename, theta, S, W, maxLength)
         od;
 
         for n in nodes0 do
-            PrintTo(fileV, n[2], " ", n[1], "\n");
+            if vCount = 0 then
+                PrintTo(fileV, "\n");
+                PrintTo(fileV, "[", n[2], ",\"e\"]");
+            else
+                PrintTo(fileV, ",\n");
+                PrintTo(fileV, "[", n[2], ",\"", n[1], "\"]");
+            fi;
+            
+            vCount := vCount + 1;
         od;
         
         Sort(edges0, function (a, b) return a[1] < b[1] or a[2] < b[2]; end);
 
         for e in edges0 do
-            PrintTo(fileE, e[1], " ", e[2], " ", e[3], " ", e[4], "\n");
+            if eCount = 0 then
+                PrintTo(fileE, "\n");
+            else
+                PrintTo(fileE, ",\n");
+            fi;
+        
+            PrintTo(fileE, "[", e[1]-1, ",", e[2]-1, ",", e[3], ",", e[4], "]");
+            eCount := eCount + 1;
         od;
 
         index := index + Length(nodes0);
@@ -121,9 +139,12 @@ TwistedInvolutionWeakOrdering := function (filename, theta, S, W, maxLength)
         k := k + 1;
     od;
     
+    PrintTo(fileV, "\n]");
+    PrintTo(fileE, "\n]");
+    
     CloseStream(fileV);
     CloseStream(fileE);
     
-    return [ index ];
+    return [ vCount, eCount, k - 1 ];
 end;
 

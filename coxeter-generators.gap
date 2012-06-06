@@ -43,7 +43,7 @@ CoxeterGroup_An := function (n)
 
     W := CoxeterGroup(n, upperTriangleOfCoxeterMatrix);
 
-    SetName(W, Concatenation("A_", String(n)));
+    SetName(W, Concatenation("A_{", String(n), "}"));
     SetSize(W, Factorial(n + 1));
     
     return [W, n, upperTriangleOfCoxeterMatrix];
@@ -57,7 +57,7 @@ CoxeterGroup_BCn := function (n)
     
     W := CoxeterGroup(n, upperTriangleOfCoxeterMatrix);
     
-    SetName(W, Concatenation("BC_", String(n)));
+    SetName(W, Concatenation("BC_{", String(n), "}"));
     SetSize(W, 2^n * Factorial(n));
     
     return [W, n, upperTriangleOfCoxeterMatrix];
@@ -73,7 +73,7 @@ CoxeterGroup_Dn := function (n)
     
     W := CoxeterGroup(n, upperTriangleOfCoxeterMatrix);
     
-    SetName(W, Concatenation("D_", String(n)));
+    SetName(W, Concatenation("D_{", String(n), "}"));
     SetSize(W, 2^(n-1) * Factorial(n));
     
     return [W, n, upperTriangleOfCoxeterMatrix];
@@ -183,7 +183,7 @@ CoxeterGroup_TildeAn := function (n)
 
     W := CoxeterGroup(n + 1, upperTriangleOfCoxeterMatrix);
     
-    SetName(W, Concatenation("\\tilde A_", String(n)));
+    SetName(W, Concatenation("\\tilde A_{", String(n), "}"));
     SetSize(W, infinity);
     
     return [W, n + 1, upperTriangleOfCoxeterMatrix];
