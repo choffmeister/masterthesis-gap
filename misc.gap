@@ -56,3 +56,20 @@ GroupAutomorphismIdentity := function (G)
     return GroupAutomorphismByImages(G, [1..Length(GeneratorsOfGroup(G))]);
 end;
 
+StringToFilename := function(str)
+    local result, c;
+    
+    result := "";
+    
+    for c in str do
+        if IsDigitChar(c) or IsAlphaChar(c) or c = '-' or c = '_' then
+            Add(result, c);
+        else
+            Add(result, '_');
+        fi;
+    od;
+    
+    return result;
+end;
+
+
