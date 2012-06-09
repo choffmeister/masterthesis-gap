@@ -24,7 +24,7 @@ TwistedInvolutionWeakOrderingPersistResults := function(persistInfo, nodes, edge
     
     edgesSorted := StructuralCopy(edges);
 
-    Sort(edgesSorted, function (a, b) return a.sourceIndex < b.sourceIndex or a.targetIndex < b.targetIndex; end);
+    Sort(edgesSorted, function (a, b) return a.source.absIndex < b.source.absIndex or a.target.absIndex < b.target.absIndex; end);
 
     for n in nodes do
         if n.absIndex = 1 then
@@ -43,6 +43,6 @@ TwistedInvolutionWeakOrderingPersistResults := function(persistInfo, nodes, edge
             PrintTo(persistInfo.fileE, ",\n");
         fi;
     
-        PrintTo(persistInfo.fileE, "[", e.sourceIndex-1, ",", e.targetIndex-1, ",", e.label, ",", e.type, "]");
+        PrintTo(persistInfo.fileE, "[", e.source.absIndex-1, ",", e.target.absIndex-1, ",", e.label, ",", e.type, "]");
     od;
 end;

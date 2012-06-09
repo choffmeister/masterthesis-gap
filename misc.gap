@@ -72,6 +72,17 @@ StringToFilename := function(str)
     return result;
 end;
 
+FindElement := function (list, selector)
+    local i;
+    
+    for i in [1..Length(list)] do
+        if (selector(list[i])) then
+            return list[i];
+        fi;
+    od;
+    
+    return fail;
+end;
 
 FindElementIndex := function (list, selector)
     local i;
