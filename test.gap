@@ -2,30 +2,37 @@ Read("misc.gap");
 Read("coxeter.gap");
 Read("twistedinvolution.gap");
 
+_W :=CoxeterGroup(4, [0,2,2,3,2,0]);
+SetName(_W, "Test");
+SetSize(_W, infinity);
+
 data := [
     [ CoxeterGroup_An(1), [ [1] ] ],
     [ CoxeterGroup_An(2), [ [1,2], [2,1] ] ],
     [ CoxeterGroup_An(3), [ [1,2,3], [3,2,1] ] ],
     [ CoxeterGroup_An(4), [ [1,2,3,4], [4,3,2,1] ] ],
-    [ CoxeterGroup_An(5), [ [1,2,3,4,5], [5,4,3,2,1] ] ],
-    [ CoxeterGroup_An(6), [ [1,2,3,4,5,6], [6,5,4,3,2,1] ] ],
+#    [ CoxeterGroup_An(5), [ [1,2,3,4,5], [5,4,3,2,1] ] ],
+#    [ CoxeterGroup_An(6), [ [1,2,3,4,5,6], [6,5,4,3,2,1] ] ],
 #    [ CoxeterGroup_An(7), [ [1,2,3,4,5,6,7], [7,6,5,4,3,2,1] ] ],
 #    [ CoxeterGroup_An(8), [ [1,2,3,4,5,6,7,8], [8,7,6,5,4,3,2,1] ] ],
 #    [ CoxeterGroup_An(9), [ [1,2,3,4,5,6,7,8,9], [9,8,7,6,5,4,3,2,1] ] ],
 #    [ CoxeterGroup_An(10), [ [1,2,3,4,5,6,7,8,9,10], [10,9,8,7,6,5,4,3,2,1] ] ],
-    [ CoxeterGroup_BCn(2), [ [1,2] ] ],
-    [ CoxeterGroup_BCn(3), [ [1,2,3] ] ],
-    [ CoxeterGroup_Dn(4), [ [1,2,3,4] ] ],
+#    [ CoxeterGroup_BCn(2), [ [1,2] ] ],
+#    [ CoxeterGroup_BCn(3), [ [1,2,3] ] ],
+#    [ CoxeterGroup_BCn(4), [ [1,2,3,4] ] ],
+#    [ CoxeterGroup_BCn(5), [ [1,2,3,4,5] ] ],
+#    [ CoxeterGroup_Dn(4), [ [1,2,3,4] ] ],
 #    [ CoxeterGroup_E6(), [ [1,2,3,4,5,6], [6,5,3,4,2,1] ] ],
 #    [ CoxeterGroup_E7(), [ [1,2,3,4,5,6,7] ] ],
 #    [ CoxeterGroup_E8(), [ [1,2,3,4,5,6,7,8] ] ],
-    [ CoxeterGroup_F4(), [ [1,2,3,4] ] ],
-    [ CoxeterGroup_H3(), [ [1,2,3] ] ],
-    [ CoxeterGroup_H4(), [ [1,2,3,4] ] ],
-    [ CoxeterGroup_I2m(3), [ [1,2], [2,1] ] ],
-    [ CoxeterGroup_I2m(4), [ [1,2], [2,1] ] ],
-    [ CoxeterGroup_TildeAn(1), [ [1,2], [2,1] ] ],
-    [ CoxeterGroup_TildeAn(2), [ [1,2,3] ] ]
+#    [ CoxeterGroup_F4(), [ [1,2,3,4] ] ],
+#    [ CoxeterGroup_H3(), [ [1,2,3] ] ],
+#    [ CoxeterGroup_H4(), [ [1,2,3,4] ] ],
+#    [ CoxeterGroup_I2m(3), [ [1,2], [2,1] ] ],
+#    [ CoxeterGroup_I2m(4), [ [1,2], [2,1] ] ],
+#    [ CoxeterGroup_TildeAn(1), [ [1,2], [2,1] ] ],
+#    [ CoxeterGroup_TildeAn(2), [ [1,2,3] ] ],
+#    [ [ _W, 4, [0,2,2,3,2,0] ], [ [1,2,3,4], [4,3,2,1] ] ],
 ];
 
 ProfileFunctions([FindElementIndex]);
@@ -33,6 +40,7 @@ ProfileFunctions([FindElementIndex]);
 for groupData in data do
     W := groupData[1][1];
     S := GeneratorsOfGroup(W);
+    matrix := groupData[1][3];
     
     for automorphismData in groupData[2] do
         startTime := Runtime();
@@ -57,9 +65,9 @@ for groupData in data do
         Print("Wk(" , Name(W), ", ", Name(automorphism), ")...\n");
 
         if (IsFinite(W)) then
-            info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, infinity);
+            info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, matrix, infinity);
         else
-            info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, 10);
+            info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, matrix, 10);
         fi;
         
         endTime := Runtime();
