@@ -1,10 +1,11 @@
 Read("twistedinvolutionweakordering-persist.gap");
 
 TwistedInvolutionDeduceNodeAndEdgeFromGraph := function(matrix, nodes, edges, startNode, startLabel)
-    local rank, combs, comb, trace, e, k, n;
+    local rank, combs, comb, trace, unequalNodes, e, k, n;
     
     rank := -1/2 + Sqrt(1/4 + 2*Length(matrix)) + 1;
     combs := [];
+    unequalNodes := [];
 
     for e in startNode.inEdges do
         Add(combs, rec(startNode := startNode, s := [ startLabel, e.label ], m := CoxeterMatrixEntry(matrix, rank, startLabel, e.label)));
@@ -15,7 +16,7 @@ TwistedInvolutionDeduceNodeAndEdgeFromGraph := function(matrix, nodes, edges, st
         k := 1;
         n := comb.startNode;
         
-        Add(trace, rec(node := n, edge := rec(label := comb.s[1])));
+        Add(trace, rec(node := n, edge := rec(label := comb.s[1], type := -1)));
         
         while k < comb.m do
             if k + 1 > Length(nodes) then
@@ -39,12 +40,24 @@ TwistedInvolutionDeduceNodeAndEdgeFromGraph := function(matrix, nodes, edges, st
             k := k - 1;
         od;
         
+        if k <> 0 then break; fi;
+        
         if Length(trace) = 2*comb.m then
-            return rec(node := trace[Length(trace)].node, type := trace[comb.m + 1].edge.type, trace := trace);
+            return rec(result := 0, node := trace[Length(trace)].node, type := trace[comb.m + 1].edge.type, trace := trace);
+        fi;
+        
+        if Length(trace) >= 4 then
+            if trace[Length(trace) / 2 + 1].edge.type <> trace[Length(trace) / 2].edge.type then
+                Add(unequalNodes, trace[Length(trace)].node);
+            else
+                if trace[Length(trace)].edge.type = 0 then
+                    return rec(result := 0, node := trace[Length(trace)].node, type := 0, trace := trace);
+                fi;
+            fi;
         fi;
     od;
-    
-    return fail;
+
+    return rec(result := -1, unequalNodes := unequalNodes);
 end;
 
 # Calculates the poset Wk(theta).
@@ -67,11 +80,20 @@ TwistedInvolutionWeakOrdering := function (filename, theta, S, W, matrix, maxLen
             
             prevNode := nodes[2][i];
             for label in Filtered([1..Length(S)], n -> Position(List(prevNode.inEdges, e -> e.label), n) = fail) do
+                # swap the commenting on the following two lines to disable optimization
+                #deduction := rec(result := -1, unequalNodes := []);
                 deduction := TwistedInvolutionDeduceNodeAndEdgeFromGraph(matrix, nodes, edges, prevNode, label);
-            
-                if deduction <> fail then
+                
+                if deduction.result = 0 then
                     type := deduction.type;
                     currNode := deduction.node;
+                elif deduction.result = 1 then
+                    type := deduction.type;
+                    
+                    currNode := rec(element := y, twistedLength := k + 1, inEdges := [], outEdges := [], absIndex := absNodeIndex);
+                    Add(nodes[1], currNode);
+                    
+                    absNodeIndex := absNodeIndex + 1;
                 else
                     x := prevNode.element;
                     s := S[label];
@@ -83,7 +105,11 @@ TwistedInvolutionWeakOrdering := function (filename, theta, S, W, matrix, maxLen
                         type := 0;
                     fi;
                     
-                    currNode := FindElement(nodes[1], n -> FindElement(n.inEdges, e -> e.label = label) = fail and CoxeterElementsCompare(n.element, y));
+                    currNode := FindElement(nodes[1],
+                        n -> FindElement(deduction.unequalNodes, un -> un.absIndex = n.absIndex) = fail and
+                             FindElement(n.inEdges, e -> e.label = label) = fail and
+                             CoxeterElementsCompare(n.element, y));
+
                     if currNode = fail then
                         currNode := rec(element := y, twistedLength := k + 1, inEdges := [], outEdges := [], absIndex := absNodeIndex);
                         Add(nodes[1], currNode);

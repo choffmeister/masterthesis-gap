@@ -30,6 +30,11 @@ data := [
     [ CoxeterGroup_TildeAn(2), [ [1,2,3] ] ],
 ];
 
+#data := [
+#    [ CoxeterGroup_An(3), [ [1,2,3] ] ],
+#    [ CoxeterGroup_An(6), [ [1,2,3,4,5,6] ] ],
+#    [ CoxeterGroup_H4(), [ [1,2,3,4] ] ]
+#];
 ProfileFunctions([FindElementIndex, FindElement, TwistedInvolutionDeduceNodeAndEdgeFromGraph, CoxeterElementsCompare]);
 
 for groupData in data do
