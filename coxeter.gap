@@ -1,5 +1,9 @@
 Read("coxeter-generators.gap");
 
+CoxeterElementsCompare := function (w1, w2)
+    return w1 = w2;
+end;
+
 # Reduces a word in a coxeter group.
 CoxeterReduceWord := function (w, W)
     local rep, subRep, i, j, w2;

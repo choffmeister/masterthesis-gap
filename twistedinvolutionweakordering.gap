@@ -88,12 +88,12 @@ TwistedInvolutionWeakOrdering := function (filename, theta, S, W, matrix, maxLen
                     
                     t := 1;
                     y := s^theta*x*s;
-                    if (x = y) then
+                    if (CoxeterElementsCompare(x, y)) then
                         y := x * s;
                         t := 0;
                     fi;
                     
-                    currNode := FindElement(nodes[1], n -> FindElement(n.inEdges, e -> e.label = sIndex) = fail and n.element = y);
+                    currNode := FindElement(nodes[1], n -> FindElement(n.inEdges, e -> e.label = sIndex) = fail and CoxeterElementsCompare(n.element, y));
                     if currNode = fail then
                         currNode := rec(element := y, twistedLength := k + 1, inEdges := [], outEdges := [], absIndex := absNodeIndex);
                         Add(nodes[1], currNode);

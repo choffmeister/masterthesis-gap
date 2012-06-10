@@ -30,7 +30,7 @@ data := [
     [ CoxeterGroup_TildeAn(2), [ [1,2,3] ] ],
 ];
 
-ProfileFunctions([FindElementIndex, FindElement, FindCircle]);
+ProfileFunctions([FindElementIndex, FindElement, FindCircle, CoxeterElementsCompare]);
 
 for groupData in data do
     W := groupData[1][1];
