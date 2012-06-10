@@ -30,7 +30,7 @@ data := [
     [ CoxeterGroup_TildeAn(2), [ [1,2,3] ] ],
 ];
 
-ProfileFunctions([FindElementIndex, FindElement, FindCircle, CoxeterElementsCompare]);
+ProfileFunctions([FindElementIndex, FindElement, TwistedInvolutionDeduceNodeAndEdgeFromGraph, CoxeterElementsCompare]);
 
 for groupData in data do
     W := groupData[1][1];
@@ -60,9 +60,9 @@ for groupData in data do
         Print("Wk(" , Name(W), ", ", Name(automorphism), ")...\n");
 
         if (IsFinite(W)) then
-            info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, matrix, infinity, 1);
+            info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, matrix, infinity);
         else
-            info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, matrix, 10, 1);
+            info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, matrix, 10);
         fi;
         
         endTime := Runtime();
@@ -71,15 +71,15 @@ for groupData in data do
             PrintTo(fileD, "\"wk_size\":\"infinity\",\n");
             PrintTo(fileD, "\"wk_max_length\":\"infinity\",\n");
         else
-            PrintTo(fileD, "\"wk_size\":", info[1], ",\n");
-            PrintTo(fileD, "\"wk_max_length\":", info[3], ",\n");
+            PrintTo(fileD, "\"wk_size\":", info.numNodes, ",\n");
+            PrintTo(fileD, "\"wk_max_length\":", info.maxTwistedLength, ",\n");
         fi;
         PrintTo(fileD, "\"calculation_time\":\"", ReplacedString(StringTime(endTime - startTime), " ", ""), "\"\n");
         PrintTo(fileD, "}\n");
         CloseStream(fileD);
         
         Print("- Time spent: ", StringTime(endTime - startTime), "\n");
-        Print("- Size of Inv(theta): ", info[1], "\n");
+        Print("- Size of Inv(theta): ", info.numNodes, "\n");
         Print("\n");
     od;
 od;
