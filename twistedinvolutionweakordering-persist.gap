@@ -20,11 +20,21 @@ TwistedInvolutionWeakOrderingPersistResultsClose := function(persistInfo)
 end;
 
 TwistedInvolutionWeakOrderingPersistResults := function(persistInfo, nodes, edges)
-    local edgesSorted, n, e;
+    local n, e, i, tmp, bubbles;
     
-    edgesSorted := StructuralCopy(edges);
-
-    Sort(edgesSorted, function (a, b) return a.source.absIndex < b.source.absIndex or a.target.absIndex < b.target.absIndex; end);
+    # bubble sort the edges, to make sure, that double edges are neighbours in the list
+    bubbles := 1;
+    while bubbles > 0 do
+        bubbles := 0;
+        for i in [1..Length(edges)-1] do
+            if edges[i].source.absIndex = edges[i+1].source.absIndex and edges[i].target.absIndex > edges[i+1].target.absIndex then
+                tmp := edges[i];
+                edges[i] := edges[i+1];
+                edges[i+1] := tmp;
+                bubbles := bubbles + 1;
+            fi;
+        od;
+    od;
 
     for n in nodes do
         if n.absIndex = 1 then
@@ -36,7 +46,7 @@ TwistedInvolutionWeakOrderingPersistResults := function(persistInfo, nodes, edge
         fi;
     od;
     
-    for e in edgesSorted do
+    for e in edges do
         if e.absIndex = 1 then
             PrintTo(persistInfo.fileE, "\n");
         else
