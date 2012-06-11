@@ -13,11 +13,11 @@ data := [
     [ CoxeterGroup_An(8), [ [1,2,3,4,5,6,7,8], [8,7,6,5,4,3,2,1] ] ],
 #    [ CoxeterGroup_An(9), [ [1,2,3,4,5,6,7,8,9], [9,8,7,6,5,4,3,2,1] ] ],
 #    [ CoxeterGroup_An(10), [ [1,2,3,4,5,6,7,8,9,10], [10,9,8,7,6,5,4,3,2,1] ] ],
-#    [ CoxeterGroup_BCn(2), [ [1,2] ] ],
-#    [ CoxeterGroup_BCn(3), [ [1,2,3] ] ],
-#    [ CoxeterGroup_BCn(4), [ [1,2,3,4] ] ],
-#    [ CoxeterGroup_BCn(5), [ [1,2,3,4,5] ] ],
-#    [ CoxeterGroup_Dn(4), [ [1,2,3,4] ] ],
+    [ CoxeterGroup_BCn(2), [ [1,2] ] ],
+    [ CoxeterGroup_BCn(3), [ [1,2,3] ] ],
+    [ CoxeterGroup_BCn(4), [ [1,2,3,4] ] ],
+    [ CoxeterGroup_BCn(5), [ [1,2,3,4,5] ] ],
+    [ CoxeterGroup_Dn(4), [ [1,2,3,4] ] ],
 #    [ CoxeterGroup_E6(), [ [1,2,3,4,5,6], [6,5,3,4,2,1] ] ],
 #    [ CoxeterGroup_E7(), [ [1,2,3,4,5,6,7] ] ],
 #    [ CoxeterGroup_E8(), [ [1,2,3,4,5,6,7,8] ] ],
@@ -26,16 +26,18 @@ data := [
     [ CoxeterGroup_H4(), [ [1,2,3,4] ] ],
     [ CoxeterGroup_I2m(3), [ [1,2], [2,1] ] ],
     [ CoxeterGroup_I2m(4), [ [1,2], [2,1] ] ],
-    [ CoxeterGroup_TildeAn(1), [ [1,2], [2,1] ] ],
+#    [ CoxeterGroup_TildeAn(1), [ [1,2], [2,1] ] ], # coxetergroups with an infinity label are not supported now
     [ CoxeterGroup_TildeAn(2), [ [1,2,3] ] ],
 ];
 
-#data := [
-#    [ CoxeterGroup_An(3), [ [1,2,3] ] ],
-#    [ CoxeterGroup_An(6), [ [1,2,3,4,5,6] ] ],
-#    [ CoxeterGroup_H4(), [ [1,2,3,4] ] ]
-#];
-ProfileFunctions([FindElementIndex, FindElement, TwistedInvolutionDeduceNodeAndEdgeFromGraph, CoxeterElementsCompare]);
+mat := [ 7,3,6 ];
+W := CoxeterGroup(3, mat);
+SetName(W, "\\textrm{Test}");
+SetSize(W, infinity);
+Add(data, [ [ W, 3, mat ], [ [1,2,3] ] ]);
+
+ProfileFunctions([FindElement, TwistedInvolutionDeduceNodeAndEdgeFromGraph, CoxeterElementsCompare]);
+totalStartTime := Runtime();
 
 for groupData in data do
     W := groupData[1][1];
@@ -89,6 +91,9 @@ for groupData in data do
     od;
 od;
 
+totalEndTime := Runtime();
 DisplayProfile();
+Print("Total time: ", StringTime(totalEndTime - totalStartTime), "\n");
+
 
 
