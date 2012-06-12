@@ -1,0 +1,7 @@
+#!/bin/bash -e
+
+echo 'CalculateTwistedWeakOrderings();' | gap -q run.gap
+zip -q -j results results/*
+
+exit 0
+

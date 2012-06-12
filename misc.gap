@@ -1,59 +1,41 @@
-# Generates a list of generator indices from a word.
-#
-# Example:
-# G := FreeGroup(2);
-# a := G.1;
-# b := G.2;
-# letters := GroupWordToLetters(a*a*b*a, G);
-#
-# letters <- [1,1,2,1]
-GroupWordToLetters := function (word, G)
-    local rep;
-    
-    rep := ExtRepOfObj(word);
-    
-    return Flat(List([1,3..Length(rep)-1], m -> List([1..rep[m+1]], k -> rep[m])));
-end;
-
-# Generates a word from a list of generator indices.
-#
-# Example:
-# G := FreeGroup(2);
-# a := G.1;
-# b := G.2;
-# word := GroupLettersToWord([1,1,2,1], G);
-#
-# word <- a^2*b*a
-GroupLettersToWord := function (letters, G)
-    local result, generators, i;
-    
-    result := One(G);
-    generators := GeneratorsOfGroup(G);
-    
-    for i in [1..Length(letters)] do
-        result := result * generators[letters[i]];
-    od;
-    
-    return result;
-end;
-
-GroupAutomorphismByImages := function (G, generatorPermutation)
+GroupAutomorphismByPermutation := function (G, generatorPermutation)
     local automorphism, generators;
     
     generators := GeneratorsOfGroup(G);
-    automorphism := GroupHomomorphismByImages(G, G, generators, generators{generatorPermutation});
     
-    if (generatorPermutation = [1..Length(generators)]) then
+    if generatorPermutation = "id" or generatorPermutation = [1..Length(generators)] then
+        automorphism := IdentityMapping(G);
         SetName(automorphism, "id");
-    else
-        SetName(automorphism, Concatenation("(", JoinStringsWithSeparator(generatorPermutation, ","), ")"));
+        
+        return automorphism;
+    elif generatorPermutation = "-id" then
+        generatorPermutation := Reversed([1..Length(GeneratorsOfGroup(G))]);
     fi;
+    
+    automorphism := GroupHomomorphismByImages(G, G, generators, generators{generatorPermutation});
+    SetName(automorphism, Concatenation("(", JoinStringsWithSeparator(generatorPermutation, ","), ")"));
 
     return automorphism;
 end;
 
-GroupAutomorphismIdentity := function (G)
-    return GroupAutomorphismByImages(G, [1..Length(GeneratorsOfGroup(G))]);
+GroupAutomorphismIdNeg := function (G)
+    return GroupAutomorphismByPermutation(G, Reversed([1..Length(GeneratorsOfGroup(G))]));
+end;
+
+GroupAutomorphismId := function (G)
+    return GroupAutomorphismByPermutation(G, [1..Length(GeneratorsOfGroup(G))]);
+end;
+
+FindElement := function (list, selector)
+    local i;
+    
+    for i in [1..Length(list)] do
+        if (selector(list[i])) then
+            return list[i];
+        fi;
+    od;
+    
+    return fail;
 end;
 
 StringToFilename := function(str)
@@ -70,29 +52,5 @@ StringToFilename := function(str)
     od;
     
     return result;
-end;
-
-FindElement := function (list, selector)
-    local i;
-    
-    for i in [1..Length(list)] do
-        if (selector(list[i])) then
-            return list[i];
-        fi;
-    od;
-    
-    return fail;
-end;
-
-FindElementIndex := function (list, selector)
-    local i;
-    
-    for i in [1..Length(list)] do
-        if (selector(list[i])) then
-            return i;
-        fi;
-    od;
-    
-    return -1;
 end;
 

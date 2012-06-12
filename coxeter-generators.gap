@@ -47,7 +47,7 @@ CoxeterGroup_An := function (n)
     SetName(W, Concatenation("A_{", String(n), "}"));
     SetSize(W, Factorial(n + 1));
     
-    return [W, n, upperTriangleOfCoxeterMatrix];
+    return rec(group := W, rank := n, matrix := upperTriangleOfCoxeterMatrix);
 end;
 
 CoxeterGroup_BCn := function (n)
@@ -61,7 +61,7 @@ CoxeterGroup_BCn := function (n)
     SetName(W, Concatenation("BC_{", String(n), "}"));
     SetSize(W, 2^n * Factorial(n));
     
-    return [W, n, upperTriangleOfCoxeterMatrix];
+    return rec(group := W, rank := n, matrix := upperTriangleOfCoxeterMatrix);
 end;
 
 CoxeterGroup_Dn := function (n)
@@ -77,7 +77,7 @@ CoxeterGroup_Dn := function (n)
     SetName(W, Concatenation("D_{", String(n), "}"));
     SetSize(W, 2^(n-1) * Factorial(n));
     
-    return [W, n, upperTriangleOfCoxeterMatrix];
+    return rec(group := W, rank := n, matrix := upperTriangleOfCoxeterMatrix);
 end;
 
 CoxeterGroup_E6 := function ()
@@ -90,7 +90,7 @@ CoxeterGroup_E6 := function ()
     SetName(W, "E_6");
     SetSize(W, 2^7 * 3^4 * 5);
     
-    return [W, 6, upperTriangleOfCoxeterMatrix];
+    return rec(group := W, rank := 6, matrix := upperTriangleOfCoxeterMatrix);
 end;
 
 CoxeterGroup_E7 := function ()
@@ -103,7 +103,7 @@ CoxeterGroup_E7 := function ()
     SetName(W, "E_7");
     SetSize(W, 2^10 * 3^4 * 5 * 7);
     
-    return [W, 7, upperTriangleOfCoxeterMatrix];
+    return rec(group := W, rank := 7, matrix := upperTriangleOfCoxeterMatrix);
 end;
 
 CoxeterGroup_E8 := function ()
@@ -116,7 +116,7 @@ CoxeterGroup_E8 := function ()
     SetName(W, "E_8");
     SetSize(W, 2^14 * 3^5 * 5^2 * 7);
     
-    return [W, 8, upperTriangleOfCoxeterMatrix];
+    return rec(group := W, rank := 8, matrix := upperTriangleOfCoxeterMatrix);
 end;
 
 CoxeterGroup_F4 := function ()
@@ -129,7 +129,7 @@ CoxeterGroup_F4 := function ()
     SetName(W, "F_4");
     SetSize(W, 2^7 * 3^2);
     
-    return [W, 4, upperTriangleOfCoxeterMatrix];
+    return rec(group := W, rank := 4, matrix := upperTriangleOfCoxeterMatrix);
 end;
 
 CoxeterGroup_H3 := function ()
@@ -142,7 +142,7 @@ CoxeterGroup_H3 := function ()
     SetName(W, "H_3");
     SetSize(W, 120);
     
-    return [W, 3, upperTriangleOfCoxeterMatrix];
+    return rec(group := W, rank := 3, matrix := upperTriangleOfCoxeterMatrix);
 end;
 
 CoxeterGroup_H4 := function ()
@@ -155,7 +155,7 @@ CoxeterGroup_H4 := function ()
     SetName(W, "H_4");
     SetSize(W, 14400);
     
-    return [W, 4, upperTriangleOfCoxeterMatrix];
+    return rec(group := W, rank := 4, matrix := upperTriangleOfCoxeterMatrix);
 end;
 
 CoxeterGroup_I2m := function (m)
@@ -168,7 +168,7 @@ CoxeterGroup_I2m := function (m)
     SetName(W, Concatenation("I_2(", String(m), ")"));
     SetSize(W, 2*m);
 
-    return [W, 2, upperTriangleOfCoxeterMatrix];
+    return rec(group := W, rank := 2, matrix := upperTriangleOfCoxeterMatrix);
 end;
 
 CoxeterGroup_TildeAn := function (n)
@@ -187,6 +187,6 @@ CoxeterGroup_TildeAn := function (n)
     SetName(W, Concatenation("\\tilde A_{", String(n), "}"));
     SetSize(W, infinity);
     
-    return [W, n + 1, upperTriangleOfCoxeterMatrix];
+    return rec(group := W, rank := n + 1, matrix := upperTriangleOfCoxeterMatrix);
 end;
 
