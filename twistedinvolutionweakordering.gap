@@ -56,7 +56,7 @@ TwistedInvolutionDeduceNodeAndEdgeFromGraph := function(matrix, startNode, start
 end;
 
 # Calculates the poset Wk(theta).
-TwistedInvolutionWeakOrdering := function (filename, theta, S, W, matrix, maxLength)
+TwistedInvolutionWeakOrdering := function (filename, theta, S, W, matrix)
     local persistInfo, maxOrder, nodes, edges, absNodeIndex, absEdgeIndex, prevNode, currNode, newEdge,
         label, type, deduction, k, i, s, x, y, n;
     
@@ -69,7 +69,13 @@ TwistedInvolutionWeakOrdering := function (filename, theta, S, W, matrix, maxLen
     absEdgeIndex := 1;
     k := 0;
 
-    while Length(nodes[2]) > 0 and k < maxLength do
+    while Length(nodes[2]) > 0 do
+        if not IsFinite(W) then
+            if k > 200 or absNodeIndex > 10000 then
+                break;
+            fi;
+        fi;
+        
         for i in [1..Length(nodes[2])] do
             Print(k, " ", i, "         \r");
             

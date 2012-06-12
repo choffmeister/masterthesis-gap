@@ -73,11 +73,7 @@ for groupData in data do
         Print("Wk(" , Name(W), ", ", Name(automorphism), ")...\n");
 
         startTime := Runtime();
-        if (IsFinite(W)) then
-            info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, matrix, infinity);
-        else
-            info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, matrix, 10);
-        fi;
+        info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, matrix);
         endTime := Runtime();
 
         if (Size(W) = infinity) then
