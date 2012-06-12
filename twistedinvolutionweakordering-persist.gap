@@ -1,22 +1,20 @@
 TwistedInvolutionWeakOrderingPersistResultsInit := function(filename)
     local fileV, fileE;
     
-    fileV := OutputTextFile(Concatenation("results/", filename, "-vertices"), false);
-    fileE := OutputTextFile(Concatenation("results/", filename, "-edges"), false);
-    SetPrintFormattingStatus(fileV, false);
-    SetPrintFormattingStatus(fileE, false);
-    PrintTo(fileV, "[");
-    PrintTo(fileE, "[");
+    fileV := IO_File(Concatenation("results/", filename, "-vertices"), "w", 1024*1024);
+    fileE := IO_File(Concatenation("results/", filename, "-edges"), "w", 1024*1024);
+    IO_Write(fileV, "[");
+    IO_Write(fileE, "[");
     
     return rec(fileV := fileV, fileE := fileE);
 end;
 
 TwistedInvolutionWeakOrderingPersistResultsClose := function(persistInfo)
-    PrintTo(persistInfo.fileV, "\n]");
-    PrintTo(persistInfo.fileE, "\n]");
+    IO_Write(persistInfo.fileV, "\n]");
+    IO_Write(persistInfo.fileE, "\n]");
     
-    CloseStream(persistInfo.fileV);
-    CloseStream(persistInfo.fileE);
+    IO_Close(persistInfo.fileV);
+    IO_Close(persistInfo.fileE);
 end;
 
 TwistedInvolutionWeakOrderingPersistResults := function(persistInfo, nodes, edges)
@@ -38,21 +36,21 @@ TwistedInvolutionWeakOrderingPersistResults := function(persistInfo, nodes, edge
 
     for n in nodes do
         if n.absIndex = 1 then
-            PrintTo(persistInfo.fileV, "\n");
-            PrintTo(persistInfo.fileV, "[", n.twistedLength, ",\"e\"]");
+            IO_Write(persistInfo.fileV, "\n");
+            IO_Write(persistInfo.fileV, "[", n.twistedLength, ",\"e\"]");
         else
-            PrintTo(persistInfo.fileV, ",\n");
-            PrintTo(persistInfo.fileV, "[", n.twistedLength, ",\"", n.element, "\"]");
+            IO_Write(persistInfo.fileV, ",\n");
+            IO_Write(persistInfo.fileV, "[", n.twistedLength, ",\"", n.element, "\"]");
         fi;
     od;
     
     for e in edges do
         if e.absIndex = 1 then
-            PrintTo(persistInfo.fileE, "\n");
+            IO_Write(persistInfo.fileE, "\n");
         else
-            PrintTo(persistInfo.fileE, ",\n");
+            IO_Write(persistInfo.fileE, ",\n");
         fi;
     
-        PrintTo(persistInfo.fileE, "[", e.source.absIndex-1, ",", e.target.absIndex-1, ",", e.label, ",", e.type, "]");
+        IO_Write(persistInfo.fileE, "[", e.source.absIndex-1, ",", e.target.absIndex-1, ",", e.label, ",", e.type, "]");
     od;
 end;
