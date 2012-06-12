@@ -3,31 +3,31 @@ Read("coxeter.gap");
 Read("twistedinvolution.gap");
 
 data := [
-    [ CoxeterGroup_An(1), [ [1] ] ],
-    [ CoxeterGroup_An(2), [ [1,2], [2,1] ] ],
-    [ CoxeterGroup_An(3), [ [1,2,3], [3,2,1] ] ],
-    [ CoxeterGroup_An(4), [ [1,2,3,4], [4,3,2,1] ] ],
-    [ CoxeterGroup_An(5), [ [1,2,3,4,5], [5,4,3,2,1] ] ],
-    [ CoxeterGroup_An(6), [ [1,2,3,4,5,6], [6,5,4,3,2,1] ] ],
-    [ CoxeterGroup_An(7), [ [1,2,3,4,5,6,7], [7,6,5,4,3,2,1] ] ],
-    [ CoxeterGroup_An(8), [ [1,2,3,4,5,6,7,8], [8,7,6,5,4,3,2,1] ] ],
-#    [ CoxeterGroup_An(9), [ [1,2,3,4,5,6,7,8,9], [9,8,7,6,5,4,3,2,1] ] ],
-#    [ CoxeterGroup_An(10), [ [1,2,3,4,5,6,7,8,9,10], [10,9,8,7,6,5,4,3,2,1] ] ],
-    [ CoxeterGroup_BCn(2), [ [1,2] ] ],
-    [ CoxeterGroup_BCn(3), [ [1,2,3] ] ],
-    [ CoxeterGroup_BCn(4), [ [1,2,3,4] ] ],
-    [ CoxeterGroup_BCn(5), [ [1,2,3,4,5] ] ],
-    [ CoxeterGroup_Dn(4), [ [1,2,3,4] ] ],
-#    [ CoxeterGroup_E6(), [ [1,2,3,4,5,6], [6,5,3,4,2,1] ] ],
-#    [ CoxeterGroup_E7(), [ [1,2,3,4,5,6,7] ] ],
-#    [ CoxeterGroup_E8(), [ [1,2,3,4,5,6,7,8] ] ],
-    [ CoxeterGroup_F4(), [ [1,2,3,4] ] ],
-    [ CoxeterGroup_H3(), [ [1,2,3] ] ],
-    [ CoxeterGroup_H4(), [ [1,2,3,4] ] ],
-    [ CoxeterGroup_I2m(3), [ [1,2], [2,1] ] ],
-    [ CoxeterGroup_I2m(4), [ [1,2], [2,1] ] ],
-#    [ CoxeterGroup_TildeAn(1), [ [1,2], [2,1] ] ], # coxetergroups with an infinity label are not supported now
-    [ CoxeterGroup_TildeAn(2), [ [1,2,3] ] ],
+    [ CoxeterGroup_An(1), [ "id" ] ],
+    [ CoxeterGroup_An(2), [ "id", [2,1] ] ],
+    [ CoxeterGroup_An(3), [ "id", [3,2,1] ] ],
+    [ CoxeterGroup_An(4), [ "id", [4,3,2,1] ] ],
+    [ CoxeterGroup_An(5), [ "id", [5,4,3,2,1] ] ],
+    [ CoxeterGroup_An(6), [ "id", [6,5,4,3,2,1] ] ],
+    [ CoxeterGroup_An(7), [ "id", [7,6,5,4,3,2,1] ] ],
+    [ CoxeterGroup_An(8), [ "id", [8,7,6,5,4,3,2,1] ] ],
+#    [ CoxeterGroup_An(9), [ "id", [9,8,7,6,5,4,3,2,1] ] ],
+#    [ CoxeterGroup_An(10), [ "id", [10,9,8,7,6,5,4,3,2,1] ] ],
+    [ CoxeterGroup_BCn(2), [ "id" ] ],
+    [ CoxeterGroup_BCn(3), [ "id" ] ],
+    [ CoxeterGroup_BCn(4), [ "id" ] ],
+    [ CoxeterGroup_BCn(5), [ "id" ] ],
+    [ CoxeterGroup_Dn(4), [ "id" ] ],
+#    [ CoxeterGroup_E6(), [ "id", [6,5,3,4,2,1] ] ],
+#    [ CoxeterGroup_E7(), [ "id" ] ],
+#    [ CoxeterGroup_E8(), [ "id" ] ],
+    [ CoxeterGroup_F4(), [ "id", [4,3,2,1] ] ],
+    [ CoxeterGroup_H3(), [ "id" ] ],
+    [ CoxeterGroup_H4(), [ "id" ] ],
+    [ CoxeterGroup_I2m(3), [ "id", [2,1] ] ],
+    [ CoxeterGroup_I2m(4), [ "id", [2,1] ] ],
+#    [ CoxeterGroup_TildeAn(1), [ "id", [2,1] ] ], # coxetergroups with an infinity label are not supported now
+    [ CoxeterGroup_TildeAn(2), [ "id" ] ],
 ];
 
 mat := [ 7,3,6 ];
@@ -45,9 +45,13 @@ for groupData in data do
     matrix := groupData[1][3];
     
     for automorphismData in groupData[2] do
-        startTime := Runtime();
-    
-        automorphism := GroupAutomorphismByImages(W, automorphismData);
+        if automorphismData = "id" then
+            automorphism := IdentityMapping(W);
+            SetName(automorphism, "id");
+        else
+            automorphism := GroupAutomorphismByImages(W, automorphismData);
+        fi;
+        
         filename := StringToFilename(Concatenation([Name(W), "-", Name(automorphism)]));
 
         fileD := OutputTextFile(Concatenation("results/", filename, "-data"), false);
@@ -66,12 +70,12 @@ for groupData in data do
         
         Print("Wk(" , Name(W), ", ", Name(automorphism), ")...\n");
 
+        startTime := Runtime();
         if (IsFinite(W)) then
             info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, matrix, infinity);
         else
             info := TwistedInvolutionWeakOrdering(filename, automorphism, S, W, matrix, 10);
         fi;
-        
         endTime := Runtime();
 
         if (Size(W) = infinity) then
