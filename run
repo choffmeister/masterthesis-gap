@@ -1,7 +1,19 @@
 #!/bin/bash -e
 
-echo 'CalculateTwistedWeakOrderings();' | gap -q run.gap
-zip -q -j results results/*
+if [ "$1" = "cwo" ]
+then
+	echo 'Calculating...'
+	echo 'CalculateTwistedWeakOrderings();' | gap -q run.gap
+
+	echo 'Zipping...'
+	zip -q -j results results/*
+elif [ "$1" = "tc" ]
+then
+	echo 'Testing condition...'
+	echo 'TestCondition();' | gap -q run.gap
+else
+    echo 'Usage: ./run [cwo|tc]'
+fi
 
 exit 0
 
