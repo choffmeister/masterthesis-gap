@@ -153,3 +153,39 @@ TwistedInvolutionWeakOrdering := function (filename, W, matrix, theta)
     return rec(numNodes := absNodeIndex - 1, numEdges := absEdgeIndex - 1, maxTwistedLength := k - 1);
 end;
 
+
+TwistedInvolutionWeakOrderungResiduum := function (vertex, labels)
+    local visited, queue, residuum, current, edge;
+    
+    visited := [ vertex ];
+    queue := [ vertex ];
+    residuum := [];
+    
+    while Length(queue) > 0 do
+        current := queue[1];
+        Remove(queue, 1);
+        Add(residuum, current);
+        
+        for edge in current.outEdges do
+            if edge.label in labels and not edge.target in visited then
+                Add(visited, edge.target);
+                Add(queue, edge.target);
+            fi;
+        od;
+    od;
+
+    return residuum;
+end;
+
+TwistedInvolutionWeakOrderungLongestWord := function (vertex, labels)
+    local current;
+    
+    current := vertex;
+    
+    while Length(Filtered(current.outEdges, e -> e.label in labels)) > 0 do
+        current := Filtered(current.outEdges, e -> e.label in labels)[1].target;
+    od;
+    
+    return current;
+end;
+

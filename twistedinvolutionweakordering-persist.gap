@@ -1,5 +1,5 @@
 TwistedInvolutionWeakOrderingPersistReadResults := function(filename)
-    local fileD, fileV, fileE, csvLine, data, vertices, edges, newEdge, source, target;
+    local fileD, fileV, fileE, csvLine, data, vertices, edges, newEdge, source, target, i;
     
     fileD := IO_File(Concatenation("results/", filename, "-data"), "r");
     fileV := IO_File(Concatenation("results/", filename, "-vertices"), "r", 1024*1024);
@@ -9,18 +9,22 @@ TwistedInvolutionWeakOrderingPersistReadResults := function(filename)
     vertices := [];
     edges := [];
     
+    i := 1;
     for csvLine in IO_ReadLinesIteratorCSV(fileV, ";") do
-        Add(vertices, rec(twistedLength := csvLine.twistedLength, name := csvLine.name, inEdges := [], outEdges := []));
+        Add(vertices, rec(absIndex := i, twistedLength := csvLine.twistedLength, name := csvLine.name, inEdges := [], outEdges := []));
+        i := i + 1;
     od;
     
+    i := 1;
     for csvLine in IO_ReadLinesIteratorCSV(fileE, ";") do
         source := vertices[csvLine.sourceIndex + 1];
         target := vertices[csvLine.targetIndex + 1];
-        newEdge := rec(source := source, target := target, label := csvLine.label, type := csvLine.type);
+        newEdge := rec(absIndex := i, source := source, target := target, label := csvLine.label, type := csvLine.type);
         
         Add(source.outEdges, newEdge);
         Add(target.inEdges, newEdge);
         Add(edges, newEdge);
+        i := i + 1;
     od;
     
     IO_Close(fileD);
