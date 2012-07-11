@@ -20,23 +20,23 @@ CalculateTwistedWeakOrderings := function()
 #        rec(system := CoxeterGroup_An(13), thetas := [ "id", "-id" ]),
         rec(system := CoxeterGroup_BCn(2), thetas := [ "id", "-id" ]),
         rec(system := CoxeterGroup_BCn(3), thetas := [ "id" ]),
-        rec(system := CoxeterGroup_BCn(4), thetas := [ "id" ]),
-        rec(system := CoxeterGroup_BCn(5), thetas := [ "id" ]),
-        rec(system := CoxeterGroup_BCn(6), thetas := [ "id" ]),
-        rec(system := CoxeterGroup_BCn(7), thetas := [ "id" ]),
+#        rec(system := CoxeterGroup_BCn(4), thetas := [ "id" ]),
+#        rec(system := CoxeterGroup_BCn(5), thetas := [ "id" ]),
+#        rec(system := CoxeterGroup_BCn(6), thetas := [ "id" ]),
+#        rec(system := CoxeterGroup_BCn(7), thetas := [ "id" ]),
         rec(system := CoxeterGroup_Dn(4), thetas := [ "id" ]),
         rec(system := CoxeterGroup_Dn(5), thetas := [ "id" ]),
         rec(system := CoxeterGroup_Dn(6), thetas := [ "id" ]),
         rec(system := CoxeterGroup_E6(), thetas := [ "id", [6,5,3,4,2,1] ]),
         rec(system := CoxeterGroup_E7(), thetas := [ "id" ]),
-        rec(system := CoxeterGroup_E8(), thetas := [ "id" ]),
+#        rec(system := CoxeterGroup_E8(), thetas := [ "id" ]),
         rec(system := CoxeterGroup_F4(), thetas := [ "id" ]),
         rec(system := CoxeterGroup_H3(), thetas := [ "id" ]),
         rec(system := CoxeterGroup_H4(), thetas := [ "id" ]),
-        rec(system := CoxeterGroup_I2m(3), thetas := [ "id", "-id" ]),
-        rec(system := CoxeterGroup_I2m(4), thetas := [ "id", "-id" ]),
-        rec(system := CoxeterGroup_I2m(5), thetas := [ "id", "-id" ]),
-        rec(system := CoxeterGroup_I2m(6), thetas := [ "id", "-id" ]),
+#        rec(system := CoxeterGroup_I2m(3), thetas := [ "id", "-id" ]),
+#        rec(system := CoxeterGroup_I2m(4), thetas := [ "id", "-id" ]),
+#        rec(system := CoxeterGroup_I2m(5), thetas := [ "id", "-id" ]),
+#        rec(system := CoxeterGroup_I2m(6), thetas := [ "id", "-id" ]),
     ];
 
     for task in tasks do
@@ -50,31 +50,83 @@ CalculateTwistedWeakOrderings := function()
     od;
 end;
 
+Benchmark := function ()
+    local tasks, task, theta, W, matrix, benchmarks, b, result, startTime, endTime;
+
+    tasks := [
+        rec(system := CoxeterGroup_An(9), thetas := [ "id" ]),
+        #rec(system := CoxeterGroup_An(10), thetas := [ "id" ]),
+        #rec(system := CoxeterGroup_An(11), thetas := [ "id" ]),
+        rec(system := CoxeterGroup_E6(), thetas := [ "id" ]),
+        #rec(system := CoxeterGroup_E7(), thetas := [ "id" ]),
+    ];
+    
+    benchmarks := [];
+    
+    Print("Benchmark algo 1\n");
+    
+    for task in tasks do
+        W := task.system.group;
+        matrix := task.system.matrix;
+        
+        for theta in List(task.thetas, t -> GroupAutomorphismByPermutation(W, t)) do
+            Print(Name(W), " ", Name(theta), "\n");
+            
+            startTime := Runtime();
+            result := TwistedInvolutionWeakOrdering1(fail, W, matrix, theta);
+            endTime := Runtime();
+            
+            Add(benchmarks, rec(name := Name(W), algo := "TWOA1", time := StringTime(endTime - startTime), result := result));
+        od;
+    od;
+    
+    Print("Benchmark algo 2\n");
+    
+    for task in tasks do
+        W := task.system.group;
+        matrix := task.system.matrix;
+        
+        for theta in List(task.thetas, t -> GroupAutomorphismByPermutation(W, t)) do
+            Print(Name(W), " ", Name(theta), "\n");
+            
+            startTime := Runtime();
+            result := TwistedInvolutionWeakOrdering(fail, W, matrix, theta);
+            endTime := Runtime();
+            
+            Add(benchmarks, rec(name := Name(W), algo := "TWOA2", time := StringTime(endTime - startTime), result := result));
+        od;
+    od;
+    
+    for b in benchmarks do
+        Display(b);
+    od;
+end;
+
 TestCondition := function ()
     local tasks, task, S, K, _T, T, K12, K23, K31, wK, parts, part, graph,
         resS12, resS23, resS31, resT, resDiff, i, j;
     
     tasks := [
-        "H_3-id",
-        "H_4-id",
-        "F_4-id",
-        "D__4_-id",
-        "D__5_-id",
-        "D__6_-id",
-        "E_6-id",
-        "E_7-id",
+#        "H_3-id",
+#        "H_4-id",
+#        "F_4-id",
+#        "D__4_-id",
+#        "D__5_-id",
+#        "D__6_-id",
+#        "E_6-id",
+#        "E_7-id",
         "E_8-id",
-        "A__4_-id",
-        "A__5_-id",
-        "A__6_-id",
-        "A__7_-id",
-        "BC__4_-id",
-        "BC__5_-id",
-        "BC__6_-id",
-        "A__8_-id",
-        "A__9_-id",
-        "A__10_-id",
-        "BC__7_-id",
+#        "A__4_-id",
+ #       "A__5_-id",
+ #       "A__6_-id",
+ #       "A__7_-id",
+ #       "BC__4_-id",
+ #       "BC__5_-id",
+ #       "BC__6_-id",
+ #       "A__8_-id",
+ #       "A__9_-id",
+ #       "A__10_-id",
+ #       "BC__7_-id",
     ];
     
     for task in tasks do

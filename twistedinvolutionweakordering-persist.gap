@@ -37,10 +37,12 @@ end;
 TwistedInvolutionWeakOrderingPersistResultsInit := function(filename)
     local fileD, fileV, fileE;
     
+    if (filename = fail) then return fail; fi;
+    
     fileD := IO_File(Concatenation("results/", filename, "-data"), "w");
     fileV := IO_File(Concatenation("results/", filename, "-vertices"), "w", 1024*1024);
     fileE := IO_File(Concatenation("results/", filename, "-edges"), "w", 1024*1024);
-    IO_Write(fileD, "name;rank;size;generators;matrix;automorphism;wk_size;wk_max_length;calculation_time\n");
+    IO_Write(fileD, "name;rank;size;generators;matrix;automorphism;wk_size;wk_max_length\n");
     IO_Write(fileV, "twistedLength;name\n");
     IO_Write(fileE, "sourceIndex;targetIndex;label;type\n");
 
@@ -48,12 +50,16 @@ TwistedInvolutionWeakOrderingPersistResultsInit := function(filename)
 end;
 
 TwistedInvolutionWeakOrderingPersistResultsClose := function(persistInfo)
+    if (persistInfo = fail) then return; fi;
+    
     IO_Close(persistInfo.fileD);
     IO_Close(persistInfo.fileV);
     IO_Close(persistInfo.fileE);
 end;
 
-TwistedInvolutionWeakOrderingPersistResultsInfo := function(persistInfo, W, matrix, theta, numNodes, maxTwistedLength, runtime)
+TwistedInvolutionWeakOrderingPersistResultsInfo := function(persistInfo, W, matrix, theta, numNodes, maxTwistedLength)
+    if (persistInfo = fail) then return; fi;
+    
     IO_Write(persistInfo.fileD, "\"", ReplacedString(Name(W), "\\", "\\\\"), "\";");
     IO_Write(persistInfo.fileD, Length(GeneratorsOfGroup(W)), ";");
     if (Size(W) = infinity) then
@@ -67,17 +73,17 @@ TwistedInvolutionWeakOrderingPersistResultsInfo := function(persistInfo, W, matr
 
     if (Size(W) = infinity) then
         IO_Write(persistInfo.fileD, "\"infinity\";");
-        IO_Write(persistInfo.fileD, "\"infinity\";");
+        IO_Write(persistInfo.fileD, "\"infinity\"");
     else
         IO_Write(persistInfo.fileD, numNodes, ";");
-        IO_Write(persistInfo.fileD, maxTwistedLength, ";");
+        IO_Write(persistInfo.fileD, maxTwistedLength, "");
     fi;
-    
-    IO_Write(persistInfo.fileD, "\"", ReplacedString(StringTime(runtime), " ", ""), "\"");
 end;
 
 TwistedInvolutionWeakOrderingPersistResults := function(persistInfo, nodes, edges)
     local n, e, i, tmp, bubbles;
+    
+    if (persistInfo = fail) then return; fi;
     
     # bubble sort the edges, to make sure, that double edges are neighbours in the list
     bubbles := 1;

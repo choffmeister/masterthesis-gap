@@ -1,18 +1,22 @@
 #!/bin/bash -e
 
-if [ "$1" = "cwo" ]
+if [ "$1" = "weakord" ]
 then
 	echo 'Calculating...'
 	echo 'CalculateTwistedWeakOrderings();' | gap -q run.gap
 
 	echo 'Zipping...'
 	zip -q -j results results/*
-elif [ "$1" = "tc" ]
+elif [ "$1" = "testcon" ]
 then
 	echo 'Testing condition...'
 	echo 'TestCondition();' | gap -q run.gap
+elif [ "$1" = "bench" ]
+then
+	echo 'Benchmarking...'
+	echo 'Benchmark();' | gap -q run.gap
 else
-    echo 'Usage: ./run [cwo|tc]'
+    echo 'Usage: ./run [weakord|testcon|bench]'
 fi
 
 exit 0
