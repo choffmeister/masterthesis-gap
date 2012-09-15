@@ -28,10 +28,10 @@ for task in tasks do
         
         coxeterElementComparisons := 0;
         startTime := Runtime();
-        result := TwistedInvolutionWeakOrdering1(fail, W, matrix, theta);
+        result := TwistedInvolutionWeakOrdering3(fail, W, matrix, theta);
         endTime := Runtime();
         
-        Add(benchmarks, rec(name := Name(W), algo := "TWOA1", time := StringTime(endTime - startTime), result := result, comparisons := coxeterElementComparisons));
+        Add(benchmarks, rec(name := Name(W), algo := "TWOA3", time := StringTime(endTime - startTime), result := result, comparisons := coxeterElementComparisons));
         
         coxeterElementComparisons := 0;
         startTime := Runtime();
@@ -42,10 +42,10 @@ for task in tasks do
         
         coxeterElementComparisons := 0;
         startTime := Runtime();
-        result := TwistedInvolutionWeakOrdering3(fail, W, matrix, theta);
+        result := TwistedInvolutionWeakOrdering1(fail, W, matrix, theta);
         endTime := Runtime();
         
-        Add(benchmarks, rec(name := Name(W), algo := "TWOA3", time := StringTime(endTime - startTime), result := result, comparisons := coxeterElementComparisons));
+        Add(benchmarks, rec(name := Name(W), algo := "TWOA1", time := StringTime(endTime - startTime), result := result, comparisons := coxeterElementComparisons));
     od;
 od;
 
