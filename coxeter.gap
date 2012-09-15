@@ -7,9 +7,10 @@ CoxeterElementsCompare := function (w1, w2)
     return w1 = w2;
 end;
 
-CoxeterMatrixEntry := function(matrix, rank, i, j)
-    local temp;
-    
+CoxeterMatrixEntry := function(matrix, i, j)
+    local temp, rank;
+    rank := -1/2 + Sqrt(1/4 + 2*Length(matrix)) + 1;
+
     if (i = j) then
         return 1;
     fi;

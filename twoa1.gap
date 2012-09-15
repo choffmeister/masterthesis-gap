@@ -35,7 +35,13 @@ TwistedInvolutionWeakOrdering1 := function (filename, W, matrix, theta)
                     type := 0;
                 fi;
 
-                currVertex := FindElement(vertices[1], n -> CoxeterElementsCompare(n.element, y));
+                currVertex := fail;
+                for n in vertices[1] do
+                    if CoxeterElementsCompare(n.element, y) then
+                        currVertex := n;
+                        break;
+                    fi;
+                od;
 
                 if currVertex = fail then
                     currVertex := rec(element := y, twistedLength := k + 1, inEdges := [], outEdges := [], absIndex := absVertexIndex);
