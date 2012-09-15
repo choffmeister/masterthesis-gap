@@ -21,7 +21,7 @@ TwistedInvolutionWeakOrdering3 := function (filename, W, matrix, theta)
         fi;
         
         for i in [1..Length(vertices[2])] do
-            #Print(k, " ", i, "         \r");
+            Print(k, " ", i, "         \r");
             
             prevVertex := vertices[2][i];
             for label in Filtered([1..Length(S)], n -> Position(List(prevVertex.inEdges, e -> e.label), n) = fail) do
