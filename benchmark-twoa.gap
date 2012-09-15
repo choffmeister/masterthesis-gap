@@ -27,18 +27,21 @@ tasks := [
     rec(system := CoxeterGroup_E8(), thetas := [ "id" ]),
 ];
 
-file := IO_File("benchmarks/benchmark", "w");
-IO_Write(file,"algo,W,rankW,sizeW,time,maxRho,numVertices,numEdges,comparisons\n");
-
 WriteResults := function(system, algo, time, result, comparisons)
-    IO_Write(file, algo, ",", Name(system.group), ",", system.rank, ",", Size(system.group), ",", time, ",", result.maxTwistedLength, ",", result.numVertices, ",", result.numEdges, ",", comparisons, "\n");
+    IO_Write(file, algo, ",", Name(system.group), ",", system.rank, ",", Size(system.group), ",",
+        time, ",", result.maxTwistedLength, ",", result.numVertices, ",", result.numEdges, ",",
+        comparisons, "\n");    
 end;
+
+file := IO_File("benchmarks/benchmark", "w", 1);
+IO_Write(file,"algo,W,rankW,sizeW,time,maxRho,numVertices,numEdges,comparisons\n");
 
 for task in tasks do
     W := task.system.group;
     matrix := task.system.matrix;
     
     for theta in task.thetas do
+        Print(Name(W), "\n");
         theta := GroupAutomorphismByPermutation(W, theta);
 
         coxeterElementComparisons := 0;
