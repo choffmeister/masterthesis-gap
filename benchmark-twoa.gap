@@ -3,7 +3,7 @@ Read("twistedinvolutionweakordering.gap");
 tasks := [
     rec(system := CoxeterGroup_An(6), thetas := [ "id" ]),
     rec(system := CoxeterGroup_An(7), thetas := [ "id" ]),
-    rec(system := CoxeterGroup_An(8), thetas := [ "id" ]),
+    #rec(system := CoxeterGroup_An(8), thetas := [ "id" ]),
     #rec(system := CoxeterGroup_An(9), thetas := [ "id" ]),
     #rec(system := CoxeterGroup_An(10), thetas := [ "id" ]),
     #rec(system := CoxeterGroup_An(11), thetas := [ "id" ]),
@@ -12,7 +12,6 @@ tasks := [
 ];
 
 benchmarks := [];
-#W := fail;
 
 for task in tasks do
     W := task.system.group;

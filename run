@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-if [ "$1" = "twoa" ]
+if [ "$1" = "calc" ]
 then
 	echo 'Calculating...'
-	echo '' | gap -q twoa.gap
+	echo '' | gap -q calculate-twoa.gap
 
 	echo 'Zipping...'
 	zip -q -j results results/*
@@ -12,7 +12,7 @@ then
 	echo 'Benchmarking...'
 	echo '' | gap -q benchmark-twoa.gap
 else
-    echo 'Usage: ./run [twoa|bench]'
+    echo 'Usage: ./run [calc|bench]'
 fi
 
 exit 0
