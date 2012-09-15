@@ -57,7 +57,7 @@ TwistedInvolutionWeakOrderingPersistResultsClose := function(persistInfo)
     IO_Close(persistInfo.fileE);
 end;
 
-TwistedInvolutionWeakOrderingPersistResultsInfo := function(persistInfo, W, matrix, theta, numNodes, maxTwistedLength)
+TwistedInvolutionWeakOrderingPersistResultsInfo := function(persistInfo, W, matrix, theta, numVertices, maxTwistedLength)
     if (persistInfo = fail) then return; fi;
     
     IO_Write(persistInfo.fileD, "\"", ReplacedString(Name(W), "\\", "\\\\"), "\";");
@@ -75,12 +75,12 @@ TwistedInvolutionWeakOrderingPersistResultsInfo := function(persistInfo, W, matr
         IO_Write(persistInfo.fileD, "\"infinity\";");
         IO_Write(persistInfo.fileD, "\"infinity\"");
     else
-        IO_Write(persistInfo.fileD, numNodes, ";");
+        IO_Write(persistInfo.fileD, numVertices, ";");
         IO_Write(persistInfo.fileD, maxTwistedLength, "");
     fi;
 end;
 
-TwistedInvolutionWeakOrderingPersistResults := function(persistInfo, nodes, edges)
+TwistedInvolutionWeakOrderingPersistResults := function(persistInfo, vertices, edges)
     local n, e, i, tmp, bubbles;
     
     if (persistInfo = fail) then return; fi;
@@ -99,7 +99,7 @@ TwistedInvolutionWeakOrderingPersistResults := function(persistInfo, nodes, edge
         od;
     od;
 
-    for n in nodes do
+    for n in vertices do
         if n.absIndex = 1 then
             IO_Write(persistInfo.fileV, n.twistedLength, ";\"e\"\n");
         else

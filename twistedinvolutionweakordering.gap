@@ -4,25 +4,25 @@ Read("misc.gap");
 Read("coxeter.gap");
 Read("twistedinvolutionweakordering-persist.gap");
 
-TwistedInvolutionDeduceNodeAndEdgeFromGraph := function(matrix, startNode, startLabel, labels)
-    local rank, comb, trace, possibleEqualNodes, e, k, n;
+TwistedInvolutionDeduceVertexAndEdgeFromGraph := function(matrix, startVertex, startLabel, labels)
+    local rank, comb, trace, possibleEqualVertices, e, k, n;
     
     rank := -1/2 + Sqrt(1/4 + 2*Length(matrix)) + 1;
-    possibleEqualNodes := [];
+    possibleEqualVertices := [];
     
-    for comb in List(Filtered(labels, label -> label <> startLabel), label -> rec(startNode := startNode, s := [startLabel, label], m := CoxeterMatrixEntry(matrix, rank, startLabel, label))) do
+    for comb in List(Filtered(labels, label -> label <> startLabel), label -> rec(startVertex := startVertex, s := [startLabel, label], m := CoxeterMatrixEntry(matrix, rank, startLabel, label))) do
         trace := [];
         k := 1;
-        n := comb.startNode;
+        n := comb.startVertex;
         
-        Add(trace, rec(node := n, edge := rec(label := comb.s[1], type := -1)));
+        Add(trace, rec(vertex := n, edge := rec(label := comb.s[1], type := -1)));
         
         while k < comb.m do
             e := FindElement(n.inEdges, e -> e.label = comb.s[k mod 2 + 1]);
             if e = fail then break; fi;
             n := e.source;
 
-            Add(trace, rec(node := n, edge := e));
+            Add(trace, rec(vertex := n, edge := e));
             k := k + 1;
         od;
         
@@ -31,14 +31,14 @@ TwistedInvolutionDeduceNodeAndEdgeFromGraph := function(matrix, startNode, start
             if e = fail then break; fi;
             n := e.target;
             
-            Add(trace, rec(node := n, edge := e));
+            Add(trace, rec(vertex := n, edge := e));
             k := k - 1;
         od;
         
         if k <> 0 then continue; fi;
         
         if Length(trace) = 2*comb.m then
-            return rec(result := 0, node := trace[Length(trace)].node, type := trace[comb.m + 1].edge.type, trace := trace);
+            return rec(result := 0, vertex := trace[Length(trace)].vertex, type := trace[comb.m + 1].edge.type, trace := trace);
         fi;
         
         if Length(trace) >= 4 then
@@ -46,60 +46,60 @@ TwistedInvolutionDeduceNodeAndEdgeFromGraph := function(matrix, startNode, start
                 # cannot be equal
             else
                 if trace[Length(trace)].edge.type = 0 then
-                    return rec(result := 0, node := trace[Length(trace)].node, type := 0, trace := trace);
+                    return rec(result := 0, vertex := trace[Length(trace)].vertex, type := 0, trace := trace);
                 else
-                    Add(possibleEqualNodes, trace[Length(trace)].node);
+                    Add(possibleEqualVertices, trace[Length(trace)].vertex);
                 fi;
             fi;
         else
-            Add(possibleEqualNodes, trace[Length(trace)].node);
+            Add(possibleEqualVertices, trace[Length(trace)].vertex);
         fi;
     od;
 
-    return rec(result := -1, possibleEqualNodes := possibleEqualNodes);
+    return rec(result := -1, possibleEqualVertices := possibleEqualVertices);
 end;
 
 # Calculates the poset Wk(theta).
 TwistedInvolutionWeakOrdering3 := function (filename, W, matrix, theta)
-    local persistInfo, maxOrder, nodes, edges, absNodeIndex, absEdgeIndex, prevNode, currNode, newEdge,
+    local persistInfo, maxOrder, vertices, edges, absVertexIndex, absEdgeIndex, prevVertex, currVertex, newEdge,
         label, type, deduction, startTime, endTime, S, k, i, s, x, y, n;
     
     persistInfo := TwistedInvolutionWeakOrderingPersistResultsInit(filename);
     
     S := GeneratorsOfGroup(W);
     maxOrder := Minimum([Maximum(Concatenation(matrix, [1])), 5]);
-    nodes := [ [], [ rec(element := One(W), twistedLength := 0, inEdges := [], outEdges := [], absIndex := 1) ] ];
+    vertices := [ [], [ rec(element := One(W), twistedLength := 0, inEdges := [], outEdges := [], absIndex := 1) ] ];
     edges := [ [], [] ];
-    absNodeIndex := 2;
+    absVertexIndex := 2;
     absEdgeIndex := 1;
     k := 0;
 
-    while Length(nodes[2]) > 0 do
+    while Length(vertices[2]) > 0 do
         if not IsFinite(W) then
-            if k > 200 or absNodeIndex > 10000 then
+            if k > 200 or absVertexIndex > 10000 then
                 break;
             fi;
         fi;
         
-        for i in [1..Length(nodes[2])] do
+        for i in [1..Length(vertices[2])] do
             Print(k, " ", i, "         \r");
             
-            prevNode := nodes[2][i];
-            for label in Filtered([1..Length(S)], n -> Position(List(prevNode.inEdges, e -> e.label), n) = fail) do
-                deduction := TwistedInvolutionDeduceNodeAndEdgeFromGraph(matrix, prevNode, label, [1..Length(S)]);
+            prevVertex := vertices[2][i];
+            for label in Filtered([1..Length(S)], n -> Position(List(prevVertex.inEdges, e -> e.label), n) = fail) do
+                deduction := TwistedInvolutionDeduceVertexAndEdgeFromGraph(matrix, prevVertex, label, [1..Length(S)]);
                 
                 if deduction.result = 0 then
                     type := deduction.type;
-                    currNode := deduction.node;
+                    currVertex := deduction.vertex;
                 elif deduction.result = 1 then
                     type := deduction.type;
                     
-                    currNode := rec(element := y, twistedLength := k + 1, inEdges := [], outEdges := [], absIndex := absNodeIndex);
-                    Add(nodes[1], currNode);
+                    currVertex := rec(element := y, twistedLength := k + 1, inEdges := [], outEdges := [], absIndex := absVertexIndex);
+                    Add(vertices[1], currVertex);
                     
-                    absNodeIndex := absNodeIndex + 1;
+                    absVertexIndex := absVertexIndex + 1;
                 else
-                    x := prevNode.element;
+                    x := prevVertex.element;
                     s := S[label];
                     
                     type := 1;
@@ -109,75 +109,75 @@ TwistedInvolutionWeakOrdering3 := function (filename, W, matrix, theta)
                         type := 0;
                     fi;
 
-                    currNode := FindElement(deduction.possibleEqualNodes, n -> CoxeterElementsCompare(n.element, y));
+                    currVertex := FindElement(deduction.possibleEqualVertices, n -> CoxeterElementsCompare(n.element, y));
 
-                    if currNode = fail then
-                        currNode := rec(element := y, twistedLength := k + 1, inEdges := [], outEdges := [], absIndex := absNodeIndex);
-                        Add(nodes[1], currNode);
+                    if currVertex = fail then
+                        currVertex := rec(element := y, twistedLength := k + 1, inEdges := [], outEdges := [], absIndex := absVertexIndex);
+                        Add(vertices[1], currVertex);
                         
-                        absNodeIndex := absNodeIndex + 1;
+                        absVertexIndex := absVertexIndex + 1;
                     fi;
                 fi;
                 
-                newEdge := rec(source := prevNode, target := currNode, label := label, type := type, absIndex := absEdgeIndex);
+                newEdge := rec(source := prevVertex, target := currVertex, label := label, type := type, absIndex := absEdgeIndex);
 
                 Add(edges[1], newEdge);
-                Add(currNode.inEdges, newEdge);
-                Add(prevNode.outEdges, newEdge);
+                Add(currVertex.inEdges, newEdge);
+                Add(prevVertex.outEdges, newEdge);
                 
                 absEdgeIndex := absEdgeIndex + 1;
             od;
         od;
         
-        TwistedInvolutionWeakOrderingPersistResults(persistInfo, nodes[2], edges[2]);
+        TwistedInvolutionWeakOrderingPersistResults(persistInfo, vertices[2], edges[2]);
 
-        Add(nodes, [], 1);
+        Add(vertices, [], 1);
         Add(edges, [], 1);
-        if (Length(nodes) > maxOrder + 1) then
-            for n in nodes[maxOrder + 2] do
+        if (Length(vertices) > maxOrder + 1) then
+            for n in vertices[maxOrder + 2] do
                 n.inEdges := [];
                 n.outEdges := [];
             od;
-            Remove(nodes, maxOrder + 2);
+            Remove(vertices, maxOrder + 2);
             Remove(edges, maxOrder + 2);
         fi;
         k := k + 1;
     od;
     
-    TwistedInvolutionWeakOrderingPersistResultsInfo(persistInfo, W, matrix, theta, absNodeIndex - 1, k - 1);
+    TwistedInvolutionWeakOrderingPersistResultsInfo(persistInfo, W, matrix, theta, absVertexIndex - 1, k - 1);
     TwistedInvolutionWeakOrderingPersistResultsClose(persistInfo);
     
-    return rec(numNodes := absNodeIndex - 1, numEdges := absEdgeIndex - 1, maxTwistedLength := k - 1);
+    return rec(numVertices := absVertexIndex - 1, numEdges := absEdgeIndex - 1, maxTwistedLength := k - 1);
 end;
 
 # Calculates the poset Wk(theta).
 TwistedInvolutionWeakOrdering2 := function (filename, W, matrix, theta)
-    local persistInfo, maxOrder, nodes, edges, absNodeIndex, absEdgeIndex, prevNode, currNode, newEdge,
+    local persistInfo, maxOrder, vertices, edges, absVertexIndex, absEdgeIndex, prevVertex, currVertex, newEdge,
         label, type, deduction, startTime, endTime, S, k, i, s, x, y, n;
     
     persistInfo := TwistedInvolutionWeakOrderingPersistResultsInit(filename);
     
     S := GeneratorsOfGroup(W);
     maxOrder := Minimum([Maximum(Concatenation(matrix, [1])), 5]);
-    nodes := [ [], [ rec(element := One(W), twistedLength := 0, inEdges := [], outEdges := [], absIndex := 1) ] ];
+    vertices := [ [], [ rec(element := One(W), twistedLength := 0, inEdges := [], outEdges := [], absIndex := 1) ] ];
     edges := [ [], [] ];
-    absNodeIndex := 2;
+    absVertexIndex := 2;
     absEdgeIndex := 1;
     k := 0;
 
-    while Length(nodes[2]) > 0 do
+    while Length(vertices[2]) > 0 do
         if not IsFinite(W) then
-            if k > 200 or absNodeIndex > 10000 then
+            if k > 200 or absVertexIndex > 10000 then
                 break;
             fi;
         fi;
         
-        for i in [1..Length(nodes[2])] do
+        for i in [1..Length(vertices[2])] do
             Print(k, " ", i, "         \r");
             
-            prevNode := nodes[2][i];
-            for label in Filtered([1..Length(S)], n -> Position(List(prevNode.inEdges, e -> e.label), n) = fail) do
-                x := prevNode.element;
+            prevVertex := vertices[2][i];
+            for label in Filtered([1..Length(S)], n -> Position(List(prevVertex.inEdges, e -> e.label), n) = fail) do
+                x := prevVertex.element;
                 s := S[label];
                 
                 type := 1;
@@ -187,74 +187,74 @@ TwistedInvolutionWeakOrdering2 := function (filename, W, matrix, theta)
                     type := 0;
                 fi;
 
-                currNode := FindElement(nodes[1], n -> CoxeterElementsCompare(n.element, y));
+                currVertex := FindElement(vertices[1], n -> CoxeterElementsCompare(n.element, y));
 
-                if currNode = fail then
-                    currNode := rec(element := y, twistedLength := k + 1, inEdges := [], outEdges := [], absIndex := absNodeIndex);
-                    Add(nodes[1], currNode);
+                if currVertex = fail then
+                    currVertex := rec(element := y, twistedLength := k + 1, inEdges := [], outEdges := [], absIndex := absVertexIndex);
+                    Add(vertices[1], currVertex);
                     
-                    absNodeIndex := absNodeIndex + 1;
+                    absVertexIndex := absVertexIndex + 1;
                 fi;
                 
-                newEdge := rec(source := prevNode, target := currNode, label := label, type := type, absIndex := absEdgeIndex);
+                newEdge := rec(source := prevVertex, target := currVertex, label := label, type := type, absIndex := absEdgeIndex);
 
                 Add(edges[1], newEdge);
-                Add(currNode.inEdges, newEdge);
-                Add(prevNode.outEdges, newEdge);
+                Add(currVertex.inEdges, newEdge);
+                Add(prevVertex.outEdges, newEdge);
                 
                 absEdgeIndex := absEdgeIndex + 1;
             od;
         od;
         
-        TwistedInvolutionWeakOrderingPersistResults(persistInfo, nodes[2], edges[2]);
+        TwistedInvolutionWeakOrderingPersistResults(persistInfo, vertices[2], edges[2]);
 
-        Add(nodes, [], 1);
+        Add(vertices, [], 1);
         Add(edges, [], 1);
-        if (Length(nodes) > maxOrder + 1) then
-            for n in nodes[maxOrder + 2] do
+        if (Length(vertices) > maxOrder + 1) then
+            for n in vertices[maxOrder + 2] do
                 n.inEdges := [];
                 n.outEdges := [];
             od;
-            Remove(nodes, maxOrder + 2);
+            Remove(vertices, maxOrder + 2);
             Remove(edges, maxOrder + 2);
         fi;
         k := k + 1;
     od;
     
-    TwistedInvolutionWeakOrderingPersistResultsInfo(persistInfo, W, matrix, theta, absNodeIndex - 1, k - 1);
+    TwistedInvolutionWeakOrderingPersistResultsInfo(persistInfo, W, matrix, theta, absVertexIndex - 1, k - 1);
     TwistedInvolutionWeakOrderingPersistResultsClose(persistInfo);
     
-    return rec(numNodes := absNodeIndex - 1, numEdges := absEdgeIndex - 1, maxTwistedLength := k - 1);
+    return rec(numVertices := absVertexIndex - 1, numEdges := absEdgeIndex - 1, maxTwistedLength := k - 1);
 end;
 
 # Calculates the poset Wk(theta).
 TwistedInvolutionWeakOrdering1 := function (filename, W, matrix, theta)
-    local persistInfo, maxOrder, nodes, edges, absNodeIndex, absEdgeIndex, prevNode, currNode, newEdge,
+    local persistInfo, maxOrder, vertices, edges, absVertexIndex, absEdgeIndex, prevVertex, currVertex, newEdge,
         label, type, deduction, startTime, endTime, S, k, i, s, x, y, n;
     
     persistInfo := TwistedInvolutionWeakOrderingPersistResultsInit(filename);
     
     S := GeneratorsOfGroup(W);
     maxOrder := Minimum([Maximum(Concatenation(matrix, [1])), 5]);
-    nodes := [ [], [ rec(element := One(W), twistedLength := 0, inEdges := [], outEdges := [], absIndex := 1) ] ];
+    vertices := [ [], [ rec(element := One(W), twistedLength := 0, inEdges := [], outEdges := [], absIndex := 1) ] ];
     edges := [ [], [] ];
-    absNodeIndex := 2;
+    absVertexIndex := 2;
     absEdgeIndex := 1;
     k := 0;
 
-    while Length(nodes[2]) > 0 do
+    while Length(vertices[2]) > 0 do
         if not IsFinite(W) then
-            if k > 200 or absNodeIndex > 10000 then
+            if k > 200 or absVertexIndex > 10000 then
                 break;
             fi;
         fi;
         
-        for i in [1..Length(nodes[2])] do
+        for i in [1..Length(vertices[2])] do
             Print(k, " ", i, "         \r");
             
-            prevNode := nodes[2][i];
-            for label in Filtered([1..Length(S)], n -> Position(List(prevNode.inEdges, e -> e.label), n) = fail) do
-                x := prevNode.element;
+            prevVertex := vertices[2][i];
+            for label in Filtered([1..Length(S)], n -> Position(List(prevVertex.inEdges, e -> e.label), n) = fail) do
+                x := prevVertex.element;
                 s := S[label];
                 
                 type := 1;
@@ -264,44 +264,44 @@ TwistedInvolutionWeakOrdering1 := function (filename, W, matrix, theta)
                     type := 0;
                 fi;
 
-                currNode := FindElement(nodes[1], n -> CoxeterElementsCompare(n.element, y));
+                currVertex := FindElement(vertices[1], n -> CoxeterElementsCompare(n.element, y));
 
-                if currNode = fail then
-                    currNode := rec(element := y, twistedLength := k + 1, inEdges := [], outEdges := [], absIndex := absNodeIndex);
-                    Add(nodes[1], currNode);
+                if currVertex = fail then
+                    currVertex := rec(element := y, twistedLength := k + 1, inEdges := [], outEdges := [], absIndex := absVertexIndex);
+                    Add(vertices[1], currVertex);
                     
-                    absNodeIndex := absNodeIndex + 1;
+                    absVertexIndex := absVertexIndex + 1;
                 fi;
                 
-                newEdge := rec(source := prevNode, target := currNode, label := label, type := type, absIndex := absEdgeIndex);
+                newEdge := rec(source := prevVertex, target := currVertex, label := label, type := type, absIndex := absEdgeIndex);
 
                 Add(edges[1], newEdge);
-                Add(currNode.inEdges, newEdge);
-                Add(prevNode.outEdges, newEdge);
+                Add(currVertex.inEdges, newEdge);
+                Add(prevVertex.outEdges, newEdge);
                 
                 absEdgeIndex := absEdgeIndex + 1;
             od;
         od;
         
-        TwistedInvolutionWeakOrderingPersistResults(persistInfo, nodes[2], edges[2]);
+        TwistedInvolutionWeakOrderingPersistResults(persistInfo, vertices[2], edges[2]);
 
-        Add(nodes, [], 1);
+        Add(vertices, [], 1);
         Add(edges, [], 1);
-        if (Length(nodes) > maxOrder + 1) then
-            for n in nodes[maxOrder + 2] do
+        if (Length(vertices) > maxOrder + 1) then
+            for n in vertices[maxOrder + 2] do
                 n.inEdges := [];
                 n.outEdges := [];
             od;
-            Remove(nodes, maxOrder + 2);
+            Remove(vertices, maxOrder + 2);
             Remove(edges, maxOrder + 2);
         fi;
         k := k + 1;
     od;
     
-    TwistedInvolutionWeakOrderingPersistResultsInfo(persistInfo, W, matrix, theta, absNodeIndex - 1, k - 1);
+    TwistedInvolutionWeakOrderingPersistResultsInfo(persistInfo, W, matrix, theta, absVertexIndex - 1, k - 1);
     TwistedInvolutionWeakOrderingPersistResultsClose(persistInfo);
     
-    return rec(numNodes := absNodeIndex - 1, numEdges := absEdgeIndex - 1, maxTwistedLength := k - 1);
+    return rec(numVertices := absVertexIndex - 1, numEdges := absEdgeIndex - 1, maxTwistedLength := k - 1);
 end;
 
 TwistedInvolutionWeakOrderungResiduum := function (vertex, labels)

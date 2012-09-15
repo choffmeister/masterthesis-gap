@@ -47,5 +47,5 @@ od;
 
 Print("Algo\tW\ttime\t\tmax rho\t|V|\t|E|\tcomparisons\n");
 for b in benchmarks do
-    Print(b.algo, "\t", b.name, "\t", b.time, "\t", b.result.maxTwistedLength, "\t", b.result.numNodes, "\t", b.result.numEdges, "\t", b.comparisons, "\n");
+    Print(b.algo, "\t", b.name, "\t", b.time, "\t", b.result.maxTwistedLength, "\t", b.result.numVertices, "\t", b.result.numEdges, "\t", b.comparisons, "\n");
 od;
