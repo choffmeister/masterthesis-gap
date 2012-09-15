@@ -1,23 +1,18 @@
 #!/bin/bash -e
 
-if [ "$1" = "weakord" ]
+if [ "$1" = "twoa" ]
 then
 	echo 'Calculating...'
-	echo 'CalculateTwistedWeakOrderings();' | gap -q run.gap
+	echo '' | gap -q twoa.gap
 
 	echo 'Zipping...'
 	zip -q -j results results/*
-elif [ "$1" = "testcon" ]
-then
-	echo 'Testing condition...'
-	echo 'TestCondition();' | gap -q run.gap
 elif [ "$1" = "bench" ]
 then
 	echo 'Benchmarking...'
-	echo 'Benchmark();' | gap -q run.gap
+	echo '' | gap -q benchmark-twoa.gap
 else
-    echo 'Usage: ./run [weakord|testcon|bench]'
+    echo 'Usage: ./run [twoa|bench]'
 fi
 
 exit 0
-

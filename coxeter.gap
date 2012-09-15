@@ -1,6 +1,9 @@
 Read("coxeter-generators.gap");
 
+coxeterElementComparisons := 0;
+
 CoxeterElementsCompare := function (w1, w2)
+    coxeterElementComparisons := coxeterElementComparisons + 1;
     return w1 = w2;
 end;
 
