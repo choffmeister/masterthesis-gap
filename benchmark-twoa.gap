@@ -29,7 +29,7 @@ tasks := [
 ];
 
 WriteResults := function(file, system, algo, time, result, comparisons)
-    IO_Write(file, algo, ",", Name(system.group), ",", system.rank, ",", Size(system.group), ",",
+    IO_Write(file, algo, ",$", Name(system.group), "$,", system.rank, ",", Size(system.group), ",",
         Float(time/1000), ",", result.maxTwistedLength, ",", result.numVertices, ",", result.numEdges, ",",
         comparisons, "\n");    
 end;
