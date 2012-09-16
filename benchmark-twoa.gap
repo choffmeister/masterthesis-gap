@@ -35,7 +35,7 @@ WriteResults := function(file, system, algo, time, result, comparisons)
 end;
 
 file := IO_File("benchmarks/benchmark", "w", 1);
-IO_Write(file,"algo,W,rankW,sizeW,time,maxRho,numVertices,numEdges,comparisons\n");
+IO_Write(file,"A,W,R,S,T,H,V,E,C\n");
 
 for task in tasks do
     W := task.system.group;
