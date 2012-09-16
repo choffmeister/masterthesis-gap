@@ -4,6 +4,7 @@ tasks := [
     rec(system := CoxeterGroup_An(1), thetas := [ "id" ]),
     rec(system := CoxeterGroup_An(2), thetas := [ "id" ]),
     rec(system := CoxeterGroup_An(3), thetas := [ "id" ]),
+    rec(system := CoxeterGroup_An(4), thetas := [ "id" ]),
     rec(system := CoxeterGroup_An(5), thetas := [ "id" ]),
     rec(system := CoxeterGroup_An(6), thetas := [ "id" ]),
     rec(system := CoxeterGroup_An(7), thetas := [ "id" ]),
@@ -29,7 +30,7 @@ tasks := [
 
 WriteResults := function(file, system, algo, time, result, comparisons)
     IO_Write(file, algo, ",", Name(system.group), ",", system.rank, ",", Size(system.group), ",",
-        time, ",", result.maxTwistedLength, ",", result.numVertices, ",", result.numEdges, ",",
+        Float(time/1000), ",", result.maxTwistedLength, ",", result.numVertices, ",", result.numEdges, ",",
         comparisons, "\n");    
 end;
 
@@ -43,24 +44,42 @@ for task in tasks do
     for theta in task.thetas do
         Print(Name(W), "\n");
         theta := GroupAutomorphismByPermutation(W, theta);
-
-        coxeterElementComparisons := 0;
-        startTime := Runtime();
-        result := TwistedInvolutionWeakOrdering3(fail, W, matrix, theta);
-        endTime := Runtime();
-        WriteResults(file, task.system, 3, endTime - startTime, result, coxeterElementComparisons);
-
-        coxeterElementComparisons := 0;
-        startTime := Runtime();
-        result := TwistedInvolutionWeakOrdering2(fail, W, matrix, theta);
-        endTime := Runtime();
-        WriteResults(file, task.system, 2, endTime - startTime, result, coxeterElementComparisons);
         
-        coxeterElementComparisons := 0;
+        Print("TWOA3\n");
+        k := 0;
         startTime := Runtime();
-        result := TwistedInvolutionWeakOrdering1(fail, W, matrix, theta);
-        endTime := Runtime();
-        WriteResults(file, task.system, 1, endTime - startTime, result, coxeterElementComparisons);
+        endTime := startTime;
+        while (endTime - startTime < 1000) do
+            coxeterElementComparisons := 0;
+            result := TwistedInvolutionWeakOrdering3(fail, W, matrix, theta);
+            endTime := Runtime();
+            k := k + 1;
+        od;
+        WriteResults(file, task.system, 3, (endTime - startTime)/k, result, coxeterElementComparisons);
+
+        Print("TWOA2\n");
+        k := 0;
+        startTime := Runtime();
+        endTime := startTime;
+        while (endTime - startTime < 1000) do
+            coxeterElementComparisons := 0;
+            result := TwistedInvolutionWeakOrdering2(fail, W, matrix, theta);
+            endTime := Runtime();
+            k := k + 1;
+        od;
+        WriteResults(file, task.system, 2, (endTime - startTime)/k, result, coxeterElementComparisons);
+
+        Print("TWOA1\n");
+        k := 0;
+        startTime := Runtime();
+        endTime := startTime;
+        while (endTime - startTime < 1000) do
+            coxeterElementComparisons := 0;
+            result := TwistedInvolutionWeakOrdering1(fail, W, matrix, theta);
+            endTime := Runtime();
+            k := k + 1;
+        od;
+        WriteResults(file, task.system, 1, (endTime - startTime)/k, result, coxeterElementComparisons);
     od;
 od;
 
