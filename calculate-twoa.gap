@@ -34,6 +34,12 @@ tasks := [
     rec(system := CoxeterGroup_I2m(4), thetas := [ "id", "-id" ]),
     rec(system := CoxeterGroup_I2m(5), thetas := [ "id", "-id" ]),
     rec(system := CoxeterGroup_I2m(6), thetas := [ "id", "-id" ]),
+    rec(system := CoxeterGroup_A1xA1(), thetas := [ "id" ]),
+    rec(system := CoxeterGroup_A2xA2(), thetas := [ "id" ]),
+    rec(system := CoxeterGroup_A3xA3(), thetas := [ "id" ]),
+    rec(system := CoxeterGroup_A1xA1xA1(), thetas := [ "id" ]),
+    rec(system := CoxeterGroup_A2xA2xA2(), thetas := [ "id" ]),
+    rec(system := CoxeterGroup_A3xA3xA3(), thetas := [ "id" ]),
 ];
 
 for task in tasks do
