@@ -11,8 +11,12 @@ elif [ "$1" = "bench" ]
 then
 	echo 'Benchmarking...'
 	echo '' | gap -q benchmark-twoa.gap
+elif [ "$1" = "check" ]
+then
+	echo 'Checking condition...'
+	echo '' | gap -q check-condition.gap
 else
-    echo 'Usage: ./run [calc|bench]'
+    echo 'Usage: ./run [calc|bench|check]'
 fi
 
 exit 0
