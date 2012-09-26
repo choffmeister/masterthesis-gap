@@ -1,20 +1,22 @@
 #!/bin/bash -e
 
+GAP="gap64L"
+
 if [ "$1" = "calc" ]
 then
 	echo 'Calculating...'
-	echo '' | gap -q calculate-twoa.gap
+	echo '' | $GAP -q calculate-twoa.gap
 
 	echo 'Zipping...'
 	zip -q -j results results/*
 elif [ "$1" = "bench" ]
 then
 	echo 'Benchmarking...'
-	echo '' | gap -q benchmark-twoa.gap
+	echo '' | $GAP -q benchmark-twoa.gap
 elif [ "$1" = "check" ]
 then
 	echo 'Checking condition...'
-	echo '' | gap -q check-condition.gap
+	echo '' | $GAP -q check-condition.gap
 else
     echo 'Usage: ./run [calc|bench|check]'
 fi
