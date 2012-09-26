@@ -8,10 +8,10 @@ Read("twoa1.gap");
 Read("twoa2.gap");
 Read("twoa3.gap");
 
-TwistedInvolutionWeakOrderungResiduum := function (vertex, labels)
+TwistedInvolutionWeakOrderingResiduum := function (vertex, labels)
     local visited, queue, residuum, current, edge;
     
-    visited := [ vertex ];
+    visited := [ vertex.absIndex ];
     queue := [ vertex ];
     residuum := [];
     
@@ -21,9 +21,16 @@ TwistedInvolutionWeakOrderungResiduum := function (vertex, labels)
         Add(residuum, current);
         
         for edge in current.outEdges do
-            if edge.label in labels and not edge.target in visited then
-                Add(visited, edge.target);
+            if edge.label in labels and not edge.target.absIndex in visited then
+                Add(visited, edge.target.absIndex);
                 Add(queue, edge.target);
+            fi;
+        od;
+        
+        for edge in current.inEdges do
+            if edge.label in labels and not edge.source.absIndex in visited then
+                Add(visited, edge.source.absIndex);
+                Add(queue, edge.source);
             fi;
         od;
     od;
@@ -31,7 +38,7 @@ TwistedInvolutionWeakOrderungResiduum := function (vertex, labels)
     return residuum;
 end;
 
-TwistedInvolutionWeakOrderungLongestWord := function (vertex, labels)
+TwistedInvolutionWeakOrderingLongestWord := function (vertex, labels)
     local current;
     
     current := vertex;
