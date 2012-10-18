@@ -1,5 +1,5 @@
 # Calculates the poset Wk(theta).
-TwistedInvolutionWeakOrdering3 := function (filename, W, matrix, theta)
+TwistedInvolutionWeakOrdering3 := function (filename, W, matrix, theta, kmax)
     local persistInfo, maxOrder, vertices, edges, absVertexIndex, absEdgeIndex, prevVertex, currVertex, newEdge, possibleResiduums,
         label, type, deduction, startTime, endTime, endTypes, S, k, i, s, x, _y, y, n, m, h, res;
     
@@ -14,10 +14,8 @@ TwistedInvolutionWeakOrdering3 := function (filename, W, matrix, theta)
     k := 0;
 
     while Length(vertices[2]) > 0 do
-        if not IsFinite(W) then
-            if k > 200 or absVertexIndex > 10000 then
-                break;
-            fi;
+        if kmax > -1 and k > kmax then
+            break;
         fi;
         
         for i in [1..Length(vertices[2])] do
