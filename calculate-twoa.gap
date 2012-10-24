@@ -15,34 +15,59 @@ tasks := [
     rec(system := CoxeterGroup_An(10), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_An(12), thetas := [ "id", "-id" ], kmax := -1),
     rec(system := CoxeterGroup_An(13), thetas := [ "id", "-id" ], kmax := -1),
+    
     rec(system := CoxeterGroup_BCn(2), thetas := [ "id", "-id" ], kmax := -1),
     rec(system := CoxeterGroup_BCn(3), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_BCn(4), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_BCn(5), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_BCn(6), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_BCn(7), thetas := [ "id" ], kmax := -1),
+    
     rec(system := CoxeterGroup_Dn(4), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_Dn(5), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_Dn(6), thetas := [ "id" ], kmax := -1),
+    
     rec(system := CoxeterGroup_E6(), thetas := [ "id", [6,5,3,4,2,1] ], kmax := -1),
     rec(system := CoxeterGroup_E7(), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_E8(), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_F4(), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_H3(), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_H4(), thetas := [ "id" ], kmax := -1),
+    
     rec(system := CoxeterGroup_I2m(3), thetas := [ "id", "-id" ], kmax := -1),
     rec(system := CoxeterGroup_I2m(4), thetas := [ "id", "-id" ], kmax := -1),
     rec(system := CoxeterGroup_I2m(5), thetas := [ "id", "-id" ], kmax := -1),
     rec(system := CoxeterGroup_I2m(6), thetas := [ "id", "-id" ], kmax := -1),
-    rec(system := CoxeterGroup_TildeAn(1), thetas := [ "id", "-id" ], kmax := 1),
+    
+    rec(system := CoxeterGroup_TildeAn(1), thetas := [ "id" ], kmax := 1),
     rec(system := CoxeterGroup_TildeAn(2), thetas := [ "id" ], kmax := 9),
-    rec(system := CoxeterGroup_TildeAn(3), thetas := [ "id", [3,4,1,2] ], kmax := 18),
+    rec(system := CoxeterGroup_TildeAn(3), thetas := [ "id" ], kmax := 18),
     rec(system := CoxeterGroup_TildeAn(4), thetas := [ "id" ], kmax := 30),
-    rec(system := CoxeterGroup_TildeAn(5), thetas := [ "id", "-id" ], kmax := 45),
-    rec(system := CoxeterGroup_TildeAn(6), thetas := [ "id", [4,5,6,1,2,3] ], kmax := 63),
+    rec(system := CoxeterGroup_TildeAn(5), thetas := [ "id" ], kmax := 45),
+    rec(system := CoxeterGroup_TildeAn(6), thetas := [ "id" ], kmax := 63),
+    
+    rec(system := CoxeterGroup_TildeBn(2), thetas := [ "id" ], kmax := 12),
+    rec(system := CoxeterGroup_TildeBn(3), thetas := [ "id" ], kmax := 27),
+    rec(system := CoxeterGroup_TildeBn(4), thetas := [ "id" ], kmax := 48),
+    rec(system := CoxeterGroup_TildeBn(5), thetas := [ "id" ], kmax := 75),
+    
+    rec(system := CoxeterGroup_TildeCn(3), thetas := [ "id" ], kmax := 27),
+    rec(system := CoxeterGroup_TildeCn(4), thetas := [ "id" ], kmax := 48),
+    rec(system := CoxeterGroup_TildeCn(5), thetas := [ "id" ], kmax := 75),
+    
+    rec(system := CoxeterGroup_TildeDn(4), thetas := [ "id" ], kmax := 36),
+    
+    rec(system := CoxeterGroup_TildeE6(), thetas := [ "id" ], kmax := 108),
+    rec(system := CoxeterGroup_TildeE7(), thetas := [ "id" ], kmax := 189),
+    rec(system := CoxeterGroup_TildeE8(), thetas := [ "id" ], kmax := 360),
+ 
+    rec(system := CoxeterGroup_TildeF4(), thetas := [ "id" ], kmax := 72),
+    rec(system := CoxeterGroup_TildeG2(), thetas := [ "id" ], kmax := 18),
+ 
     rec(system := CoxeterGroup_A1xA1(), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_A2xA2(), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_A3xA3(), thetas := [ "id" ], kmax := -1),
+    
     rec(system := CoxeterGroup_A1xA1xA1(), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_A2xA2xA2(), thetas := [ "id" ], kmax := -1),
     rec(system := CoxeterGroup_A3xA3xA3(), thetas := [ "id" ], kmax := -1),
