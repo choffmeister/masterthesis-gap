@@ -58,16 +58,16 @@ for task in tasks do
 
                     if Length(resDiff) > 0 then
                         Print("*** FOUND COUNTEREXAMPLE ***\n",
-                            "W = ", graph.name, "\n",
-                            "theta = ", graph.automorphism, "\n",
+                            "W = ", graph.data.name, "\n",
+                            "theta = ", graph.data.automorphism, "\n",
                             "S = ", S, "\n",
                             "K = ", K, "\n",
-                            "wK = ", wK, "\n",
+                            "wK = ", wK.name, "\n",
                             "T = ", T, "\n",
-                            "K12 = ", K12, "\n",
-                            "K23 = ", K23, "\n",
-                            "K31 = ", K31, "\n",
-                            "w = ", resDiff, "\n\n");
+                            "S12 = ", S12, "\n",
+                            "S23 = ", S23, "\n",
+                            "S31 = ", S31, "\n",
+                            "w = ", List(resDiff, n -> n.name), "\n\n");
                     fi;
                 od;
             od;
