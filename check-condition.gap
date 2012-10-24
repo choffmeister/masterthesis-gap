@@ -71,7 +71,7 @@ for task in tasks do
 
                     resDiff := Difference(Intersection(resS12, resS23, resS31), resT);
 
-                    if Length(resDiff) = 0 then
+                    if Length(resDiff) > 0 then
                         Print("*** FOUND COUNTEREXAMPLE ***\n",
                             "W = ", graph.data.name, "\n",
                             "theta = ", graph.data.automorphism, "\n",
