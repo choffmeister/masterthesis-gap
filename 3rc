@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+GAP="gap64L"
+
+echo 'Checking for 3RC...'
+echo '' | $GAP -q 3rc.gap
+
+exit 0

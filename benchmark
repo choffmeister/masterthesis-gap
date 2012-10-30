@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+GAP="gap64L"
+
+echo 'Benchmarking...'
+echo '' | $GAP -q benchmark.gap
+
+exit 0
