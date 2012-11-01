@@ -2,7 +2,7 @@ Read("twistedinvolutionweakordering.gap");
 
 tasks := [];
 
-#for n in [3..13] do Add(tasks, rec(system := CoxeterGroup_An(n), thetas := [ "id", "-id" ], kmax := -1)); od;
+for n in [8..8] do Add(tasks, rec(system := CoxeterGroup_An(n), thetas := [ [1..n], Reversed([1..n]) ], kmax := -1)); od;
 #for n in [3..10] do Add(tasks, rec(system := CoxeterGroup_BCn(n), thetas := [ "id", ], kmax := -1)); od;
 #for n in [4..8] do Add(tasks, rec(system := CoxeterGroup_Dn(n), thetas := [ "id", ], kmax := -1)); od;
 #Add(tasks, rec(system := CoxeterGroup_E6(), thetas := [ "id", [6,5,3,4,2,1] ], kmax := -1));
@@ -26,9 +26,9 @@ tasks := [];
 #for p in [3..10] do for q in [Maximum(3, p)..10] do for r in [Maximum(4, q)..10] do Add(tasks, rec(system := CoxeterGroup_X33pqr(p, q, r), thetas := [ "id" ], kmax := 3*r)); od; od; od;
 
 #Add(tasks, rec(system := CoxeterGroup_X41(), thetas := [ "id" ], kmax := 3*15));
-Add(tasks, rec(system := CoxeterGroup_X42(), thetas := [ "id" ], kmax := 3*15));
+#Add(tasks, rec(system := CoxeterGroup_X42(), thetas := [ "id" ], kmax := 3*15));
 #Add(tasks, rec(system := CoxeterGroup_X43(), thetas := [ "id" ], kmax := 3*15));
-Add(tasks, rec(system := CoxeterGroup_X44(), thetas := [ "id" ], kmax := 3*15));
+#Add(tasks, rec(system := CoxeterGroup_X44(), thetas := [ "id" ], kmax := 3*15));
 #Add(tasks, rec(system := CoxeterGroup_X45(), thetas := [ "id" ], kmax := 3*9));
 #Add(tasks, rec(system := CoxeterGroup_X46(), thetas := [ "id" ], kmax := 3*9));
 #Add(tasks, rec(system := CoxeterGroup_X47(), thetas := [ "id" ], kmax := 3*15));
@@ -46,11 +46,10 @@ for task in tasks do
     kmax := task.kmax;
     
     for theta in task.thetas do
-        theta := GroupAutomorphismByPermutation(W, theta);
-
-        Print("Wk(", Name(W), ", ", Name(theta), ")\n");
-        filename := StringToFilename(Concatenation(Name(W), "-", Name(theta)));
- 
+        # handle Wk(W,\theta)
+        Print("Wk(", Name(W), ", ", theta, ")\n");
+        filename := StringToFilename(Concatenation(Name(W), "-", String(List(theta, p -> p))));
+        
         # calculate Wk(W,\theta)
         Print("- Calculating poset\n");
         TwistedInvolutionWeakOrdering3(filename, W, matrix, theta, kmax);
@@ -76,7 +75,7 @@ for task in tasks do
             
             Print("- IS NOT 3RC **************************************\n\n");
         else
-            Print("- IS 3RC\n\n");
+            Print("- IS 3RC                                           \n\n");
         fi;
     od;
 od;

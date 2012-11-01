@@ -1,31 +1,3 @@
-GroupAutomorphismByPermutation := function (G, generatorPermutation)
-    local automorphism, generators;
-    
-    generators := GeneratorsOfGroup(G);
-    
-    if generatorPermutation = "id" or generatorPermutation = [1..Length(generators)] then
-        automorphism := IdentityMapping(G);
-        SetName(automorphism, "id");
-        
-        return automorphism;
-    elif generatorPermutation = "-id" then
-        generatorPermutation := Reversed([1..Length(GeneratorsOfGroup(G))]);
-    fi;
-    
-    automorphism := GroupHomomorphismByImages(G, G, generators, generators{generatorPermutation});
-    SetName(automorphism, Concatenation("(", JoinStringsWithSeparator(generatorPermutation, ","), ")"));
-
-    return automorphism;
-end;
-
-GroupAutomorphismIdNeg := function (G)
-    return GroupAutomorphismByPermutation(G, Reversed([1..Length(GeneratorsOfGroup(G))]));
-end;
-
-GroupAutomorphismId := function (G)
-    return GroupAutomorphismByPermutation(G, [1..Length(GeneratorsOfGroup(G))]);
-end;
-
 FindElement := function (list, selector)
     local i;
     

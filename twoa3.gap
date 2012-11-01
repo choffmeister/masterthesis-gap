@@ -1,11 +1,12 @@
 # Calculates the poset Wk(theta).
 TwistedInvolutionWeakOrdering3 := function (filename, W, matrix, theta, kmax)
     local persistInfo, maxOrder, vertices, edges, absVertexIndex, absEdgeIndex, prevVertex, currVertex, newEdge, possibleResiduums,
-        label, type, deduction, startTime, endTime, endTypes, S, k, i, s, x, _y, y, n, m, h, res;
+        label, type, deduction, startTime, endTime, endTypes, S, k, i, s, x, _y, y, n, m, h, res, thetamap;
     
     persistInfo := TwistedInvolutionWeakOrderingPersistResultsInit(filename);
     
     S := GeneratorsOfGroup(W);
+    thetamap := GroupHomomorphismByImages(W, W, S, S{theta});
     maxOrder := Minimum([Maximum(Concatenation(matrix, [1])), 5]);
     vertices := [ [], [ rec(element := One(W), twistedLength := 0, inEdges := [], outEdges := [], absIndex := 1) ] ];
     edges := [ [], [] ];
@@ -26,7 +27,7 @@ TwistedInvolutionWeakOrdering3 := function (filename, W, matrix, theta, kmax)
                 x := prevVertex.element;
                 s := S[label];
                 y := x*s;
-                _y := s^theta*y;
+                _y := s^thetamap*y;
                 type := -1;
 
                 possibleResiduums := DetectPossibleRank2Residuums(prevVertex, label, [1..Length(S)]);

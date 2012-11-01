@@ -69,7 +69,7 @@ TwistedInvolutionWeakOrderingPersistResultsInfo := function(persistInfo, W, matr
     fi;
     IO_Write(persistInfo.fileD, "[", JoinStringsWithSeparator(List(GeneratorsOfGroup(W), n -> Concatenation("\"", String(n), "\"")), ","), "];");
     IO_Write(persistInfo.fileD, "[", JoinStringsWithSeparator(matrix, ","), "];");
-    IO_Write(persistInfo.fileD, "\"", Name(theta), "\";");
+    IO_Write(persistInfo.fileD, theta, ";");
 
     if (Size(W) = infinity) then
         IO_Write(persistInfo.fileD, "\"infinity\";");
